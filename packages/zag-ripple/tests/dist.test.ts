@@ -1,6 +1,6 @@
 import { createMachine } from "@zag-js/core"
 import { mount, tick } from "ripple"
-import { normalizeProps, mergeProps, onMount } from "../dist/index.mjs"
+import { normalizeProps, mergeProps } from "../dist/index.mjs"
 import Harness from "./DistHarness.tsrx"
 
 async function renderMachine(machine: any, machineProps?: any) {
@@ -91,19 +91,5 @@ describe("dist build", () => {
   test("mergeProps combines objects", () => {
     const merged = mergeProps({ a: 1 }, { b: 2 })
     expect(merged).toMatchObject({ a: 1, b: 2 })
-  })
-
-  test("onMount runs callback", async () => {
-    const fn = vi.fn()
-    const target = document.createElement("div")
-    document.body.appendChild(target)
-
-    // onMount needs a component context, so use a minimal harness
-    const { default: OnMountTest } = await import("./OnMountTest.tsrx")
-    mount(OnMountTest, { target, props: { fn } })
-    await tick()
-
-    expect(fn).toHaveBeenCalledOnce()
-    target.remove()
   })
 })

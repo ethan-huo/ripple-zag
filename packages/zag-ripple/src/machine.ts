@@ -24,7 +24,6 @@ import {
 import { isFunction, isString, toArray, warn, ensure } from "@zag-js/utils"
 import { track, untrack, effect, type Tracked } from "ripple"
 import { createBindable } from "./bindable"
-import { createRefs } from "./refs"
 import { createTrack } from "./track"
 import { access, compact } from "./utils"
 
@@ -322,6 +321,18 @@ function flush(fn: VoidFunction) {
 function createProp<T>(value: () => T) {
   return function get<K extends keyof T>(key: K): T[K] {
     return value()[key]
+  }
+}
+
+function createRefs<T>(refs: T) {
+  const ref = { current: refs }
+  return {
+    get<K extends keyof T>(key: K): T[K] {
+      return ref.current[key]
+    },
+    set<K extends keyof T>(key: K, value: T[K]) {
+      ref.current[key] = value
+    },
   }
 }
 

@@ -11,17 +11,11 @@
   <sup>
     <br />
     <br />
-    <a href="https://www.npmjs.com/package/zag-ripple?style=for-the-badge">
-       <img src="https://img.shields.io/npm/v/zag-ripple.svg?style=for-the-badge" alt="npm package" />
-    </a>
-    <a href="https://www.npmjs.com/package/zag-ripple?style=for-the-badge">
-      <img src="https://img.shields.io/npm/dw/zag-ripple.svg?style=for-the-badge" alt="npm  downloads" />
-    </a>
 <a>
-    <img alt="NPM" src="https://img.shields.io/npm/l/zag-ripple?style=for-the-badge">
+    <img alt="License" src="https://img.shields.io/github/license/ethan-huo/zag-ripple?style=for-the-badge">
 </a>
 
-<a><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/anubra266/zag-ripple?logo=github&style=for-the-badge">
+<a><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/ethan-huo/zag-ripple?logo=github&style=for-the-badge">
 
 </a>
     <br />
@@ -32,7 +26,7 @@
   <br />
   <br />
   <br />
-  <pre>npm i <a href="https://www.npmjs.com/package/zag-ripple">zag-ripple</a></pre>
+  <pre>bun add github:ethan-huo/zag-ripple#v0.1.4</pre>
   <br />
   <br />
   <br />
@@ -43,16 +37,15 @@
 ## Install
 
 ```bash
-npm i --save zag-ripple
-#or
-yarn add zag-ripple
-#or
-pnpm add zag-ripple
+bun add github:ethan-huo/zag-ripple#v0.1.4
 ```
+
+Each release tag is a package snapshot whose repository root is installable as
+`zag-ripple`. Use the latest `vX.Y.Z` tag from GitHub when adding the dependency.
 
 ## Usage
 
-Check components in [Repo](https://github.com/anubra266/zag-ripple/tree/main/site/src/components/demos).
+Check components in [Repo](https://github.com/ethan-huo/zag-ripple/tree/main/site/src/components/demos).
 
 ## Sponsors ✨
 

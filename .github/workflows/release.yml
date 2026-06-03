@@ -1,44 +1,112 @@
-name: Publish
+name: Release
 
 on:
+  workflow_dispatch:
   push:
-    paths:
-      - ".changeset/**"
-      - "packages/**"
     branches:
       - main
-      
+    paths:
+      - packages/zag-ripple/package.json
+
 permissions:
-  id-token: write  # Required for OIDC
   contents: write
-  pull-requests: write
+
+concurrency:
+  group: release-zag-ripple
+  cancel-in-progress: false
 
 jobs:
-  release:
-    name: Release
+  tag:
+    name: Build package snapshot and tag
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install
-        uses: ./.github/composite-actions/install
-
-      - name: Build packages
-        run: pnpm build
-
-      - name: Create release Pull Request or publish to NPM
-        id: changesets
-        uses: changesets/action@v1
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          publish: pnpm release
-          commit: "ci(changesets): version packages"
-          createGithubReleases: true
-        env:
-          NPM_CONFIG_PROVENANCE: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          bun-version: 1.3.14
 
-      - name: Push tags
-        run: git push --follow-tags
+      - name: Resolve version tag
+        id: version
+        run: |
+          set -euo pipefail
+
+          VERSION="$(node -e 'const fs = require("node:fs"); const pkg = JSON.parse(fs.readFileSync("packages/zag-ripple/package.json", "utf8")); console.log(pkg.version)')"
+          TAG="v$VERSION"
+          export VERSION
+
+          if ! node -e 'const version = process.env.VERSION; process.exit(/^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$/.test(version) ? 0 : 1)' ; then
+            echo "Invalid packages/zag-ripple/package.json version: $VERSION"
+            exit 1
+          fi
+
+          git fetch --tags --force
+          if git rev-parse "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Tag already exists: $TAG"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+            echo "released=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          LATEST_TAG="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | sed -n '1p')"
+          export LATEST_VERSION="${LATEST_TAG#v}"
+          if [[ -n "$LATEST_TAG" ]] && ! node -e 'const current = process.env.VERSION.split(/[+-]/)[0].split(".").map(Number); const latest = process.env.LATEST_VERSION.split(/[+-]/)[0].split(".").map(Number); for (let i = 0; i < 3; i++) { if (current[i] > latest[i]) process.exit(0); if (current[i] < latest[i]) process.exit(1); } process.exit(process.env.VERSION > process.env.LATEST_VERSION ? 0 : 1)' ; then
+            echo "packages/zag-ripple version $VERSION must be greater than latest tag $LATEST_TAG"
+            exit 1
+          fi
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "released=true" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        if: steps.version.outputs.released == 'true'
+        run: bun install --frozen-lockfile
+
+      - name: Test package
+        if: steps.version.outputs.released == 'true'
+        run: bun --filter zag-ripple test -- --run
+
+      - name: Build package
+        if: steps.version.outputs.released == 'true'
+        run: |
+          set -euo pipefail
+          bun --filter zag-ripple build
+          test -f packages/zag-ripple/dist/index.mjs
+          test -f packages/zag-ripple/dist/index.js
+          test -f packages/zag-ripple/dist/index.d.ts
+
+      - name: Create release snapshot tag
+        if: steps.version.outputs.released == 'true'
+        run: |
+          set -euo pipefail
+
+          RELEASE_DIR="$(mktemp -d)"
+          cp packages/zag-ripple/package.json "$RELEASE_DIR/package.json"
+          cp packages/zag-ripple/CHANGELOG.md "$RELEASE_DIR/CHANGELOG.md"
+          cp README.md LICENSE "$RELEASE_DIR/"
+          cp -R packages/zag-ripple/dist "$RELEASE_DIR/dist"
+          cp -R packages/zag-ripple/src "$RELEASE_DIR/src"
+
+          node -e 'const fs = require("node:fs"); const path = process.argv[1]; const pkg = JSON.parse(fs.readFileSync(path, "utf8")); delete pkg.scripts; delete pkg.devDependencies; delete pkg["clean-package"]; fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + "\n")' "$RELEASE_DIR/package.json"
+
+          test ! -e "$RELEASE_DIR/.github"
+          test ! -e "$RELEASE_DIR/site"
+          test -f "$RELEASE_DIR/dist/index.mjs"
+          test -f "$RELEASE_DIR/dist/index.js"
+          test -f "$RELEASE_DIR/dist/index.d.ts"
+
+          git init -b release "$RELEASE_DIR"
+          git -C "$RELEASE_DIR" config user.name "github-actions[bot]"
+          git -C "$RELEASE_DIR" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$RELEASE_DIR" add .
+          git -C "$RELEASE_DIR" commit -m "release: $TAG dist"
+          git -C "$RELEASE_DIR" tag -a "$TAG" -m "$TAG"
+          git -C "$RELEASE_DIR" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git -C "$RELEASE_DIR" push origin "refs/tags/$TAG"
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

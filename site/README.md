@@ -7,18 +7,18 @@ A minimal Ripple application template with TypeScript and Vite.
 1. Install dependencies:
 
     ```bash
-    pnpm install
+    bun install
     ```
 
 2. Start the development server:
 
     ```bash
-    pnpm dev
+    bun dev
     ```
 
 3. Build for production:
     ```bash
-    pnpm build
+    bun build
     ```
 
 ## Code Formatting
@@ -27,8 +27,8 @@ This template includes Prettier with the Ripple plugin for consistent code forma
 
 ### Available Commands
 
-- `pnpm format` - Format all files
-- `pnpm format:check` - Check if files are formatted correctly
+- `bun format` - Format all files
+- `bun format:check` - Check if files are formatted correctly
 
 ### Configuration
 
