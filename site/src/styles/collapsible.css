@@ -24,7 +24,7 @@
 }
 
 [data-scope='collapsible'][data-part='content'] a {
-	@apply text-primary hover:underline font-medium;
+	@apply text-foreground hover:underline font-medium;
 }
 
 [data-scope='collapsible'][data-part='indicator'] {

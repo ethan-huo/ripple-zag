@@ -27,11 +27,11 @@
 }
 
 [data-scope='radio-group'][data-part='item-control']:hover {
-	@apply border-primary/50;
+	@apply border-border;
 }
 
 [data-scope='radio-group'][data-part='item'][data-state='checked'] [data-part='item-control'] {
-	@apply bg-primary border-primary text-primary-foreground;
+	@apply bg-foreground border-foreground text-background;
 }
 
 [data-scope='radio-group'][data-part='item'][data-disabled] {

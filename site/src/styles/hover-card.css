@@ -1,5 +1,5 @@
 [data-scope='hover-card'][data-part='trigger'] {
-	@apply inline-block rounded-lg overflow-hidden hover:ring-2 hover:ring-ring hover:ring-offset-2 hover:ring-offset-background transition-all mx-auto;
+	@apply inline-block rounded-md overflow-hidden border border-border hover:ring-2 hover:ring-ring hover:ring-offset-2 hover:ring-offset-background transition-all mx-auto;
 }
 
 [data-scope='hover-card'][data-part='trigger'] img {
@@ -7,7 +7,7 @@
 }
 
 [data-scope='hover-card'][data-part='content'] {
-	@apply bg-popover rounded-lg drop-shadow-md drop-shadow-border p-0 w-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200 ;
+	@apply bg-popover rounded-md border border-border shadow-sm p-0 w-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200 ;
 }
 
 [data-scope='hover-card'][data-part='arrow'] {
@@ -63,7 +63,7 @@
 }
 
 [data-scope='hover-card'][data-part='content'] > div:last-child > div > p a {
-	@apply text-primary hover:underline font-medium;
+	@apply text-foreground hover:underline font-medium;
 }
 
 /* Stats section */

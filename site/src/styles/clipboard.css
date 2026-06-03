@@ -27,9 +27,9 @@
 }
 
 [data-scope='clipboard'][data-part='trigger'][data-state='copied'] {
-	@apply bg-emerald-50 border-emerald-200 dark:bg-emerald-950 dark:border-emerald-800;
+	@apply bg-muted border-border;
 }
 
 [data-scope='clipboard'][data-part='trigger'][data-state='copied'] svg {
-	@apply text-emerald-600 dark:text-emerald-400;
+	@apply text-foreground;
 }

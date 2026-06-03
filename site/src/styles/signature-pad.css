@@ -7,7 +7,7 @@
 }
 
 [data-scope='signature-pad'][data-part='control'] {
-	@apply relative border border-border rounded-lg bg-background overflow-hidden h-44;
+	@apply relative border border-border rounded-md bg-background overflow-hidden h-44;
 }
 
 [data-scope='signature-pad'][data-part='segment'] {

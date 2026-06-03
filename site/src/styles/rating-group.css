@@ -28,15 +28,15 @@
 }
 
 [data-scope='rating-group'][data-part='item'] [data-part='star'] {
-	color: #bdbdbd;
+	@apply text-muted-foreground;
 }
 
 [data-scope='rating-group'][data-part='item'][data-highlighted] [data-part='star'] {
-	@apply text-yellow-400;
+	@apply text-foreground;
 }
 
 [data-scope='rating-group'][data-part='item'][data-highlighted][data-disabled] [data-part='star'] {
-	color: #a1a1a1;
+	@apply text-muted-foreground;
 }
 
 [data-scope='rating-group'][data-part='hidden-input'] {

@@ -23,5 +23,5 @@
 }
 
 [data-scope='tabs'][data-part='content'] p {
-	@apply text-sm text-muted-foreground leading-relaxed p-4 bg-muted/30 rounded-lg;
+	@apply text-sm text-muted-foreground leading-relaxed p-4 bg-muted/30 rounded-md;
 }

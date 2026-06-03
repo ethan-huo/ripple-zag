@@ -1,5 +1,5 @@
 import { mount } from 'ripple';
-import { Layout } from './Layout.ripple';
+import { Layout } from './Layout.tsrx';
 import './styles/index.css';
 import { inject } from "@vercel/analytics"
 

@@ -25,7 +25,7 @@
 
 /* Content Panel */
 [data-scope='date-picker'][data-part='content'] {
-	@apply bg-popover border border-border rounded-lg shadow-lg p-4 min-w-80;
+	@apply bg-popover border border-border rounded-md shadow-sm p-4 min-w-80;
 }
 
 /* View Controls */
@@ -69,27 +69,27 @@
 }
 
 [data-scope='date-picker'][data-part='table-cell-trigger']:hover {
-	@apply bg-accent/10;
+	@apply bg-muted;
 }
 
 [data-scope='date-picker'][data-part='table-cell-trigger'][data-focus] {
-	@apply bg-accent text-accent-foreground;
+	@apply bg-muted text-foreground;
 }
 
 [data-scope='date-picker'][data-part='table-cell-trigger'][data-selected] {
-	@apply bg-primary text-primary-foreground;
+	@apply bg-foreground text-background;
 }
 
 [data-scope='date-picker'][data-part='table-cell-trigger'][data-today] {
-	@apply not-data-selected:text-primary font-semibold;
+	@apply not-data-selected:text-foreground font-semibold;
 }
 
 [data-scope='date-picker'][data-part='table-cell-trigger'][data-today][data-selected] {
-	@apply bg-primary text-primary-foreground;
+	@apply bg-foreground text-background;
 }
 
 [data-scope='date-picker'][data-part='table-cell-trigger'][data-in-range]:not([data-selected]) {
-	@apply bg-primary/20;
+	@apply bg-muted;
 }
 
 [data-scope='date-picker'][data-part='table-cell-trigger'][data-outside-range] {

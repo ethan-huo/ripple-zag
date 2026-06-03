@@ -16,7 +16,7 @@
 }
 
 [data-scope='menu'][data-part='content'] {
-	@apply bg-popover border border-border rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background p-1 min-w-48 z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200;
+	@apply bg-popover border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background p-1 min-w-48 z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200;
 	list-style: none;
 	margin: 0;
 }
@@ -26,11 +26,11 @@
 }
 
 [data-scope='menu'][data-part='item']:hover {
-	@apply bg-primary text-primary-foreground;
+	@apply bg-muted text-foreground;
 }
 
 [data-scope='menu'][data-part='item'][data-highlighted] {
-	@apply bg-primary text-primary-foreground;
+	@apply bg-muted text-foreground;
 }
 
 [data-scope='menu'][data-part='item'][data-disabled] {
@@ -43,11 +43,11 @@
 }
 
 [data-scope='menu'][data-part='trigger-item']:hover {
-	@apply bg-primary text-primary-foreground;
+	@apply bg-muted text-foreground;
 }
 
 [data-scope='menu'][data-part='trigger-item'][data-highlighted] {
-	@apply bg-primary text-primary-foreground;
+	@apply bg-muted text-foreground;
 }
 
 [data-scope='menu'][data-part='trigger-item'] [data-part='indicator'] svg {

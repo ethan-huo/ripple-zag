@@ -12,6 +12,7 @@ import type {
 } from "@zag-js/core"
 import {
   createScope,
+  ensureStateIndex,
   findTransition,
   getExitEnterStates,
   hasTag,
@@ -21,7 +22,7 @@ import {
   resolveStateValue,
 } from "@zag-js/core"
 import { isFunction, isString, toArray, warn, ensure } from "@zag-js/utils"
-import { track, get, untrack, effect, type Tracked } from "ripple"
+import { track, untrack, effect, type Tracked } from "ripple"
 import { createBindable } from "./bindable"
 import { createRefs } from "./refs"
 import { createTrack } from "./track"
@@ -55,18 +56,18 @@ export function useMachine<T extends MachineSchema>(
       const unwrapped = compact(access(userProps))
       return machine.props?.({
         props: unwrapped,
-        scope: get(scope),
+        scope: scope.value,
       }) ?? unwrapped
     },
   )
 
-  const prop: any = createProp(() => get(props))
+  const prop: any = createProp(() => props.value)
 
   const context: any = machine.context?.({
     prop,
     bindable: createBindable,
     get scope() {
-      return get(scope)
+      return scope.value
     },
     flush,
     getContext() {
@@ -142,7 +143,7 @@ export function useMachine<T extends MachineSchema>(
     computed,
     flush,
     get scope() {
-      return get(scope)
+      return scope.value
     },
     choose,
   })
@@ -198,7 +199,7 @@ export function useMachine<T extends MachineSchema>(
       event: eventRef.current,
       prop,
       refs,
-      scope: get(scope),
+      scope: scope.value,
       computed: computed,
     })
   }
@@ -276,7 +277,7 @@ export function useMachine<T extends MachineSchema>(
 
     // save current transition
     transitionRef.current = transition
-    const target = resolveStateValue(machine, transition.target ?? currentState, source)
+    const target = resolveTransitionTarget(machine, transition.target ?? currentState, source)
 
     debug("transition", event.type, transition.target || currentState, `(${transition.actions})`)
 
@@ -303,7 +304,7 @@ export function useMachine<T extends MachineSchema>(
     context: ctx,
     prop,
     get scope() {
-      return get(scope)
+      return scope.value
     },
     refs,
     computed,
@@ -322,4 +323,21 @@ function createProp<T>(value: () => T) {
   return function get<K extends keyof T>(key: K): T[K] {
     return value()[key]
   }
+}
+
+function resolveTransitionTarget<T extends MachineSchema>(
+  machine: Machine<T>,
+  value: T["state"] | string,
+  source?: string,
+): T["state"] {
+  const stateValue = String(value)
+  if (source && !stateValue.includes(".") && !stateValue.startsWith("#")) {
+    const childPath = `${source}.${stateValue}`
+    // Zag 1.41 resolves bare relative targets from ancestors/siblings; parent-local
+    // child targets still need the explicit child path for older machine definitions.
+    if (ensureStateIndex(machine).has(childPath)) {
+      return resolveStateValue(machine, childPath, source)
+    }
+  }
+  return resolveStateValue(machine, value, source)
 }

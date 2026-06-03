@@ -1,5 +1,5 @@
 import { mount, tick } from "ripple"
-import Harness from "./MachineHarness.ripple"
+import Harness from "./MachineHarness.tsrx"
 
 export async function renderMachine(machine: any, machineProps?: any) {
   let current: any

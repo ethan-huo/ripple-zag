@@ -1,0 +1,34 @@
+import { track } from "ripple";
+import Fuse from 'fuse.js';
+
+
+export function useSearch(
+    query: any,
+    collection: any,
+    keys: any
+) {
+
+    const fuse = new Fuse(collection, {
+        keys,
+        threshold: 0.2,
+    })
+
+    const results = track(() => {
+        if (query.value) {
+            return fuse.search(query.value).map((result) => result.item);
+        }
+
+        if (keys.length !== 0) {
+            const mainKey = keys[0].name;
+      
+            return collection.sort((a, b) => {
+              const aString = a[mainKey];
+              const bString = b[mainKey];
+              return aString.localeCompare(bString);
+            });
+          }
+    })
+
+
+    return results
+}

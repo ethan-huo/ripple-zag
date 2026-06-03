@@ -1,9 +1,9 @@
 [data-scope='popover'][data-part='trigger'] {
-	@apply px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background font-medium mx-auto block;
+	@apply px-4 py-2 bg-background text-foreground border border-border rounded-md hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background font-medium mx-auto block;
 }
 
 [data-scope='popover'][data-part='content'] {
-	@apply bg-popover rounded-lg drop-shadow-md drop-shadow-border p-4 w-80 z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200;
+	@apply bg-popover rounded-md border border-border shadow-sm p-4 w-80 z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200;
 	transform-origin: var(--transform-origin);
 }
 
@@ -33,7 +33,7 @@
 }
 
 [data-scope='popover'][data-part='content'] > div:nth-child(2) > button {
-	@apply px-3 py-1.5 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background font-medium text-sm;
+	@apply px-3 py-1.5 bg-background text-foreground border border-border rounded-md hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background font-medium text-sm;
 }
 
 [data-scope='popover'][data-part='close-trigger'] {

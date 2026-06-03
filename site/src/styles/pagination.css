@@ -28,7 +28,7 @@
 }
 
 [data-scope='pagination'][data-part='item'][data-selected] {
-	@apply bg-primary text-primary-foreground border-primary;
+	@apply bg-foreground text-background border-foreground;
 }
 
 [data-scope='pagination'][data-part='ellipsis'] {

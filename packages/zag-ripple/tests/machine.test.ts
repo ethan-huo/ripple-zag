@@ -1282,7 +1282,7 @@ describe("controlled state", () => {
 
     // Use the controlled harness that manages tracked values inside a component
     const { mount, tick } = await import("ripple")
-    const { default: ControlledHarness } = await import("./ControlledHarness.ripple")
+    const { default: ControlledHarness } = await import("./ControlledHarness.tsrx")
 
     let ctrl: any
     const target = document.createElement("div")

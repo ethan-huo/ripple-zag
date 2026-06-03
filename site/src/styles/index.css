@@ -4,28 +4,14 @@
 
 @import './theme.css';
 
-/* Custom grid pattern background */
 .grid-pattern {
-	background-image:
-		linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-	background-size: 50px 50px;
+	background-image: linear-gradient(var(--border) 1px, transparent 1px);
+	background-size: 100% 3rem;
+	opacity: 0.45;
 }
 
 .dark .grid-pattern {
-	background-image:
-		linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-	background-size: 50px 50px;
-}
-
-/* Glow effects for interactive elements */
-.glow-blue {
-	box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-}
-
-.glow-blue-strong {
-	box-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
+	background-image: linear-gradient(var(--gray-c1) 1px, transparent 1px);
 }
 
 html.dark .shiki,

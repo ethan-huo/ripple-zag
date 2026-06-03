@@ -1,6 +1,6 @@
 import type { Bindable, BindableParams } from "@zag-js/core"
 import { isFunction, identity } from "@zag-js/utils"
-import { track, get, set, effect, untrack, flushSync } from "ripple"
+import { track, effect, untrack, flushSync } from "ripple"
 
 export function createBindable<T>(props: () => BindableParams<T>): Bindable<T> {
   const initial = props().value ?? props().defaultValue
@@ -13,12 +13,12 @@ export function createBindable<T>(props: () => BindableParams<T>): Bindable<T> {
   // Derived: is this value controlled externally?
   const controlledSignal = track(() => props().value != undefined)
 
-  const valueRef = { current: untrack(() => get(valueSignal)) }
+  const valueRef = { current: untrack(() => valueSignal.value) }
   const prevValue: Record<"current", T | undefined> = { current: undefined }
 
   // Sync the ref with the current value
   effect(() => {
-    const v = get(controlledSignal) ? props().value : get(valueSignal)
+    const v = controlledSignal.value ? props().value : valueSignal.value
     prevValue.current = v as T
     valueRef.current = v as T
   })
@@ -36,7 +36,7 @@ export function createBindable<T>(props: () => BindableParams<T>): Bindable<T> {
       console.log(`[bindable > ${props().debug}] setValue`, { next, prev })
     }
 
-    if (!get(controlledSignal)) set(valueSignal, next)
+    if (!controlledSignal.value) valueSignal.value = next
 
     // Synchronously update refs so re-entrant calls (e.g. focus/blur
     // events triggered by .focus() inside an action) see the correct
@@ -51,10 +51,10 @@ export function createBindable<T>(props: () => BindableParams<T>): Bindable<T> {
   }
 
   function getValue(): T {
-    if (get(controlledSignal)) {
+    if (controlledSignal.value) {
       return props().value as T
     }
-    return get(valueSignal)
+    return valueSignal.value
   }
 
   return {

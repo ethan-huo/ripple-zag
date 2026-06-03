@@ -1,10 +1,9 @@
 import { isFunction, isPlainObject } from "@zag-js/utils"
-import { get, type Tracked } from "ripple"
+import type { Tracked } from "ripple"
 
 export function access<T>(v: T | (() => T)): T {
-    const gv = isFunction(v) ? v() : v
-    return get(gv as Tracked<T>)
-    
+  const gv = isFunction(v) ? v() : v
+  return (isTracked(gv) ? gv.value : gv) as T
 }
 
 /**
@@ -14,14 +13,18 @@ export function access<T>(v: T | (() => T)): T {
  * This function unwraps at the top level AND per-property level.
  */
 export function compact(obj: any): any {
-    if (!isPlainObject(obj) || obj === undefined) return obj
-    const keys = Reflect.ownKeys(obj).filter((key) => typeof key === "string")
-    const result: any = {}
-    for (const key of keys) {
-      // Unwrap individual tracked prop values
-      let v = get(obj[key])
-      if (v === undefined) continue
-      result[key] = compact(v)
-    }
-    return result
+  if (!isPlainObject(obj) || obj === undefined) return obj
+  const keys = Reflect.ownKeys(obj).filter((key) => typeof key === "string")
+  const result: any = {}
+  for (const key of keys) {
+    // Ripple 0.3 exposes tracked values through `.value`; older `get()` is gone.
+    const v = access(obj[key])
+    if (v === undefined) continue
+    result[key] = compact(v)
   }
+  return result
+}
+
+function isTracked<T>(value: unknown): value is Tracked<T> {
+  return typeof value === "object" && value !== null && "value" in value && ("__v" in value || "v" in value || "#v" in value)
+}

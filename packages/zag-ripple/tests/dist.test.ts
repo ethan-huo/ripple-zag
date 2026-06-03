@@ -1,7 +1,7 @@
 import { createMachine } from "@zag-js/core"
 import { mount, tick } from "ripple"
 import { normalizeProps, mergeProps, onMount } from "../dist/index.mjs"
-import Harness from "./DistHarness.ripple"
+import Harness from "./DistHarness.tsrx"
 
 async function renderMachine(machine: any, machineProps?: any) {
   let current: any
@@ -99,7 +99,7 @@ describe("dist build", () => {
     document.body.appendChild(target)
 
     // onMount needs a component context, so use a minimal harness
-    const { default: OnMountTest } = await import("./OnMountTest.ripple")
+    const { default: OnMountTest } = await import("./OnMountTest.tsrx")
     mount(OnMountTest, { target, props: { fn } })
     await tick()
 

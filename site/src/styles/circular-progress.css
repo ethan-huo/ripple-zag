@@ -20,7 +20,7 @@
 }
 
 [data-scope='progress'][data-part='circle-range'] {
-	@apply stroke-primary;
+	@apply stroke-foreground;
 	transition-property: stroke-dasharray, stroke-dashoffset, stroke;
 	transition-duration: 0.6s;
 }

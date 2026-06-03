@@ -1,5 +1,0 @@
-import { onMount } from "../dist/index.mjs"
-
-export default component OnMountTest({ fn }: any) {
-    onMount(fn)
-}

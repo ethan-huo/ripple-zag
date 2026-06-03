@@ -15,14 +15,17 @@
   "author": "Abraham Aremu <anubra266@gmail.com>",
   "homepage": "https://github.com/anubra266/zag-ripple#readme",
   "license": "MIT",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./src/index.ts",
-      "types": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -44,19 +47,19 @@
   },
   "clean-package": "./clean-package.config.json",
   "dependencies": {
-    "@zag-js/core": "^1.35.2",
-    "@zag-js/types": "^1.35.2",
-    "@zag-js/utils": "^1.35.2"
+    "@zag-js/core": "^1.41.1",
+    "@zag-js/types": "^1.41.1",
+    "@zag-js/utils": "^1.41.1"
   },
   "peerDependencies": {
-    "ripple": ">=0.2.0"
+    "ripple": ">=0.3.0"
   },
   "devDependencies": {
-    "@ripple-ts/vite-plugin": "https://pkg.pr.new/@ripple-ts/vite-plugin@722",
+    "@ripple-ts/vite-plugin": "^0.3.72",
     "clean-package": "2.2.0",
     "jsdom": "^28.1.0",
     "tsup": "^8.4.0",
-    "typescript": "~5.6.2",
+    "typescript": "^5.9.2",
     "vitest": "^4.0.18"
   }
 }

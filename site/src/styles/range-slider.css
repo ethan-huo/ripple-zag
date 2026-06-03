@@ -31,12 +31,12 @@
 }
 
 [data-scope='slider'][data-part='range'] {
-	@apply bg-primary rounded-full;
+	@apply bg-foreground rounded-full;
 	height: 100%;
 }
 
 [data-scope='slider'][data-part='thumb'] {
-	@apply flex items-center justify-center bg-background border-2 border-primary rounded-full shadow-md transition-colors;
+	@apply flex items-center justify-center bg-background border border-border rounded-full shadow-sm transition-colors;
 	width: var(--slider-thumb-size);
 	height: var(--slider-thumb-size);
 }

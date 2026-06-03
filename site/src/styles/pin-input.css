@@ -15,11 +15,11 @@
 }
 
 [data-scope='pin-input'][data-part='input']:focus {
-	@apply border-primary;
+	@apply border-foreground;
 }
 
 [data-scope='pin-input'][data-part='input'][data-complete] {
-	@apply border-primary bg-primary/5;
+	@apply border-border bg-muted;
 }
 
 [data-scope='pin-input'][data-part='hidden-input'] {

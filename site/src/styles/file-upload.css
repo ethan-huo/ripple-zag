@@ -3,16 +3,16 @@
 }
 
 [data-scope='file-upload'][data-part='dropzone'] {
-	@apply flex flex-col items-center justify-center gap-4 p-8 border-2 border-dashed border-border rounded-lg bg-background/50 transition-colors cursor-pointer hover:bg-muted/50;
+	@apply flex flex-col items-center justify-center gap-4 p-8 border border-dashed border-border rounded-md bg-background transition-colors cursor-pointer hover:bg-muted/50;
 	min-height: 200px;
 }
 
 [data-scope='file-upload'][data-part='dropzone'][data-dragging] {
-	@apply border-primary bg-primary/10;
+	@apply border-border bg-muted/40;
 }
 
 [data-scope='file-upload'][data-part='dropzone'][data-invalid] {
-	@apply border-destructive bg-destructive/10;
+	@apply border-destructive bg-destructive/5;
 }
 
 [data-scope='file-upload'][data-part='dropzone'] span {
@@ -20,7 +20,7 @@
 }
 
 [data-scope='file-upload'][data-part='trigger'] {
-	@apply px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background font-medium text-sm;
+	@apply px-4 py-2 bg-background text-foreground border border-border rounded-md hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background font-medium text-sm;
 }
 
 [data-scope='file-upload'][data-part='hidden-input'] {
@@ -45,7 +45,7 @@
 }
 
 [data-scope='file-upload'][data-part='item-delete-trigger'] {
-	@apply flex items-center justify-center w-8 h-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors;
+	@apply flex items-center justify-center w-8 h-8 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors;
 }
 
 [data-scope='file-upload'][data-part='item-delete-trigger'] svg {
@@ -54,7 +54,7 @@
 
 /* Enhanced States */
 [data-scope='file-upload'][data-part='dropzone'][data-dragging] span {
-	@apply text-primary font-medium;
+	@apply text-foreground font-medium;
 }
 
 [data-scope='file-upload'][data-part='dropzone'][data-invalid] span {

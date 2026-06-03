@@ -1,6 +1,6 @@
 /* Trigger Button */
 [data-scope='floating-panel'][data-part='trigger'] {
-	@apply px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background font-medium mx-auto block;
+	@apply px-4 py-2 bg-background text-foreground border border-border rounded-md hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background font-medium mx-auto block;
 }
 
 /* Positioner */
@@ -10,7 +10,7 @@
 
 /* Content Panel */
 [data-scope='floating-panel'][data-part='content'] {
-	@apply bg-background border border-border rounded-lg shadow-xl flex flex-col pointer-events-auto outline-none;
+	@apply bg-background border border-border rounded-md shadow-sm flex flex-col pointer-events-auto outline-none;
 }
 
 [data-scope='floating-panel'][data-part='content'][data-topmost] {
@@ -28,7 +28,7 @@
 
 /* Header */
 [data-scope='floating-panel'][data-part='header'] {
-	@apply flex justify-between items-center px-4 py-2 bg-muted/50 border-b border-border;
+	@apply flex justify-between items-center px-4 py-2 bg-muted/30 border-b border-border;
 }
 
 [data-scope='floating-panel'][data-part='title'] {
@@ -67,7 +67,7 @@
 }
 
 [data-scope='floating-panel'][data-part='body'] input[type='checkbox'] {
-	@apply w-4 h-4 text-primary bg-background border border-border rounded focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background;
+	@apply w-4 h-4 text-foreground bg-background border border-border rounded focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background;
 }
 
 [data-scope='floating-panel'][data-part='body'] label:has(input[type='checkbox']) {
@@ -76,7 +76,7 @@
 
 /* Resize Triggers */
 [data-scope='floating-panel'][data-part='resize-trigger'] {
-	@apply absolute bg-primary/20 hover:bg-primary/40 transition-colors;
+	@apply absolute bg-border/50 hover:bg-border transition-colors;
 }
 
 /* North/South resize handles */

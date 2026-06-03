@@ -15,7 +15,7 @@ div:has(> [data-scope='progress'][data-part='root']) {
 }
 
 [data-scope='progress'][data-part='range'] {
-	@apply h-full bg-primary rounded-full transition-all duration-300 ease-out;
+	@apply h-full bg-foreground rounded-full transition-all duration-300 ease-out;
 	width: var(--percent);
 	--translate-x: -100%;
 }

@@ -7,11 +7,11 @@
 }
 
 [data-scope='toggle-group'][data-part='item'][data-state='on'] {
-	@apply bg-primary text-primary-foreground shadow-sm;
+	@apply bg-foreground text-background shadow-sm;
 }
 
 [data-scope='toggle-group'][data-part='item'][data-state='on']:hover {
-	@apply bg-primary/90;
+	@apply bg-foreground/90;
 }
 
 [data-scope='toggle-group'][data-part='item']:disabled {

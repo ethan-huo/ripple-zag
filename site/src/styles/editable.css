@@ -41,5 +41,5 @@
 }
 
 [data-scope='editable'][data-part='submit-trigger'] {
-	@apply bg-primary text-primary-foreground hover:bg-primary/90;
+	@apply bg-foreground text-background hover:bg-foreground/90;
 }

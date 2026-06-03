@@ -15,11 +15,11 @@
 }
 
 [data-scope='checkbox'][data-part='control'][data-state='checked'] {
-	@apply bg-primary border-primary text-primary-foreground;
+	@apply bg-foreground border-foreground text-background;
 }
 
 [data-scope='checkbox'][data-part='control'][data-state='indeterminate'] {
-	@apply bg-primary border-primary text-primary-foreground;
+	@apply bg-foreground border-foreground text-background;
 }
 
 [data-scope='checkbox'][data-part='control'][data-disabled] {
