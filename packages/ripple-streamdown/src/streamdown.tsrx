@@ -1,4 +1,4 @@
-import { Fragment, track, trackAsync } from "ripple"
+import { Fragment, track, type Component } from "ripple"
 import {
   completeMarkdown,
   type MarkdownRenderCache,
@@ -30,8 +30,8 @@ export type StreamdownProps = StreamdownOptions & {
   class?: string
   className?: string
   animated?: boolean | StreamdownAnimateOptions
-  blockError?: (props: StreamdownBlockErrorProps) => unknown
-  blockSkeleton?: (props: StreamdownBlockRenderProps) => unknown
+  blockError?: Component<StreamdownBlockErrorProps>
+  blockSkeleton?: Component<StreamdownBlockRenderProps>
   dir?: "auto" | "ltr" | "rtl"
   parseMarkdownIntoBlocksFn?: (markdown: string) => string[]
   plugins?: StreamdownPlugins
@@ -357,7 +357,7 @@ function createRenderBlocks(
         return {
           block,
           index,
-          key: String(index),
+          key: `renderer:${index}:${renderer.name}:${source}`,
           renderer,
           type: "renderer",
         }
@@ -367,8 +367,9 @@ function createRenderBlocks(
     const baseHtml = renderCachedMarkdownBlock(source, props, cache)
     const isLastBlock = index === lastBlockIndex
     const shouldAnimateBlock = isLastBlock && props.isAnimating && props.animated !== false
-    const key = String(index)
-    const previousAnimationState = animationState.get(key)
+    const key = `markdown:${index}`
+    const animationKey = String(index)
+    const previousAnimationState = animationState.get(animationKey)
     const prevContentLength = previousAnimationState && source.length >= previousAnimationState.sourceLength
       ? previousAnimationState.charCount
       : 0
@@ -377,7 +378,7 @@ function createRenderBlocks(
       : undefined
 
     if (animationResult) {
-      animationState.set(key, {
+      animationState.set(animationKey, {
         charCount: animationResult.charCount,
         sourceLength: source.length,
       })
@@ -403,12 +404,12 @@ function detectTextDirection(text: string) {
 
 function RendererFallbackBlock(props: {
   block: StreamdownCodeBlock
-  fallback?: (props: StreamdownBlockRenderProps) => unknown
+  fallback?: StreamdownBlockRenderer["fallback"]
 }) {
-  const renderProps = { block: props.block }
-
   if (props.fallback) {
-    return <>{props.fallback(renderProps)}</>
+    const FallbackComponent = track(() => props.fallback!)
+
+    return <@FallbackComponent block={props.block} />
   }
 
   return <DefaultBlockSkeleton block={props.block} />
@@ -416,28 +417,28 @@ function RendererFallbackBlock(props: {
 
 function RendererBlock(props: {
   block: StreamdownCodeBlock
-  blockError?: (props: StreamdownBlockErrorProps) => unknown
-  blockSkeleton?: (props: StreamdownBlockRenderProps) => unknown
+  blockError?: Component<StreamdownBlockErrorProps>
+  blockSkeleton?: Component<StreamdownBlockRenderProps>
   renderer: StreamdownBlockRenderer
 }) {
-  const renderProps = { block: props.block }
   const fallback = props.renderer.fallback ?? props.blockSkeleton
   const errorComponent = props.blockError ?? DefaultBlockError
+  const ErrorComponent = track(() => errorComponent)
 
   if (props.block.isStreamingTail) {
     return <RendererFallbackBlock block={props.block} fallback={fallback} />
   }
 
-  const html = trackAsync(() => Promise.resolve(props.renderer.render(renderProps)))
+  const RendererComponent = track(() => props.renderer.component)
 
   return (
     <div class="ripple-streamdown-renderer-block" data-ripple-streamdown-renderer-block={props.renderer.name}>
       try {
-        <Fragment innerHTML={html.value} />
+        <@RendererComponent block={props.block} />
       } pending {
         <RendererFallbackBlock block={props.block} fallback={fallback} />
       } catch (error) {
-        {errorComponent({ ...renderProps, error })}
+        <@ErrorComponent block={props.block} error={error} />
       }
     </div>
   )

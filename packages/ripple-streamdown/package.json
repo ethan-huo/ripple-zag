@@ -13,7 +13,7 @@
   "exports": {
     ".": "./src/streamdown.tsrx",
     "./core": "./src/core.ts",
-    "./mermaid": "./src/mermaid.ts",
+    "./mermaid": "./src/mermaid.tsrx",
     "./styles.css": "./src/styles.css",
     "./types": "./src/types.ts",
     "./package.json": "./package.json"

@@ -1,3 +1,5 @@
+import type { Component } from "ripple"
+
 export type StreamdownCodeBlock = {
   code: string
   isStreamingTail: boolean
@@ -10,14 +12,12 @@ export type StreamdownBlockRenderProps = {
   block: StreamdownCodeBlock
 }
 
-export type StreamdownBlockRendererResult = string | Promise<string>
-
 export type StreamdownBlockRenderer = {
-  fallback?: (props: StreamdownBlockRenderProps) => unknown
+  component: Component<StreamdownBlockRenderProps>
+  fallback?: Component<StreamdownBlockRenderProps>
   language?: string | string[]
   match?: (block: StreamdownCodeBlock) => boolean
   name: string
-  render: (props: StreamdownBlockRenderProps) => StreamdownBlockRendererResult
 }
 
 export type StreamdownPlugins = {
