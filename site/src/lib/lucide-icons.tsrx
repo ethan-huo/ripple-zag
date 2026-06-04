@@ -12,10 +12,6 @@ type IconProps = {
   [key: string]: any
 }
 
-function mergeClasses(...classes: Array<string | undefined | null>) {
-  return classes.filter(Boolean).join(" ")
-}
-
 function getStrokeWidth(size: string | number, strokeWidth: string | number, absoluteStrokeWidth: boolean) {
   return absoluteStrokeWidth ? (Number(strokeWidth) * 24) / Number(size) : strokeWidth
 }
@@ -45,7 +41,7 @@ export function ArrowDownLeft(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-arrow-down-left", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-arrow-down-left", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -82,7 +78,7 @@ export function ArrowLeft(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-arrow-left", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-arrow-left", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -119,7 +115,7 @@ export function ArrowRight(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-arrow-right", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-arrow-right", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -156,7 +152,7 @@ export function Bold(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-bold", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-bold", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -192,7 +188,7 @@ export function CalendarDays(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-calendar-days", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-calendar-days", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -237,7 +233,7 @@ export function Check(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-check", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-check", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -273,7 +269,7 @@ export function ChevronDown(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-chevron-down", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-chevron-down", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -309,7 +305,7 @@ export function ChevronLeft(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-chevron-left", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-chevron-left", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -345,7 +341,7 @@ export function ChevronRight(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-chevron-right", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-chevron-right", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -381,7 +377,7 @@ export function ChevronsUpDown(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-chevrons-up-down", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-chevrons-up-down", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -418,7 +414,7 @@ export function ChevronUp(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-chevron-up", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-chevron-up", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -454,7 +450,7 @@ export function CircleAlert(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-circle-alert", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-circle-alert", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -492,7 +488,7 @@ export function ClipboardCopy(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-clipboard-copy", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-clipboard-copy", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -532,7 +528,7 @@ export function Code(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-code", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-code", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -569,7 +565,7 @@ export function CodeXml(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-code-xml", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-code-xml", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -607,7 +603,7 @@ export function Copy(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-copy", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-copy", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -644,7 +640,7 @@ export function ExternalLink(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-external-link", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-external-link", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -682,7 +678,7 @@ export function Eye(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-eye", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-eye", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -719,7 +715,7 @@ export function EyeOff(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-eye-off", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-eye-off", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -758,7 +754,7 @@ export function File(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-file", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-file", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -795,7 +791,7 @@ export function FileText(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-file-text", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-file-text", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -835,7 +831,7 @@ export function Folder(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-folder", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-folder", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -871,7 +867,7 @@ export function Github(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-github", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-github", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -908,7 +904,7 @@ export function Info(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-info", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-info", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -946,7 +942,7 @@ export function Italic(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-italic", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-italic", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -984,7 +980,7 @@ export function Keyboard(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-keyboard", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-keyboard", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1028,7 +1024,7 @@ export function Loader(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-loader", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-loader", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1071,7 +1067,7 @@ export function Maximize2(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-maximize2", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-maximize2", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1110,7 +1106,7 @@ export function Minus(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-minus", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-minus", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1146,7 +1142,7 @@ export function Moon(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-moon", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-moon", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1182,7 +1178,7 @@ export function Pipette(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-pipette", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-pipette", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1220,7 +1216,7 @@ export function Play(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-play", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-play", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1256,7 +1252,7 @@ export function RotateCcw(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-rotate-ccw", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-rotate-ccw", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1293,7 +1289,7 @@ export function Search(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-search", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-search", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1330,7 +1326,7 @@ export function Settings(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-settings", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-settings", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1367,7 +1363,7 @@ export function Sparkles(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-sparkles", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-sparkles", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1406,7 +1402,7 @@ export function Sun(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-sun", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-sun", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1450,7 +1446,7 @@ export function TriangleAlert(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-triangle-alert", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-triangle-alert", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1488,7 +1484,7 @@ export function Underline(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-underline", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-underline", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1525,7 +1521,7 @@ export function X(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-x", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-x", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {
@@ -1562,7 +1558,7 @@ export function Zap(props: IconProps) {
     stroke-width={computedStrokeWidth}
     stroke-linecap="round"
     stroke-linejoin="round"
-    class={mergeClasses("lucide-icon", "lucide", "lucide-zap", classValue, className)}
+    class={["lucide-icon", "lucide", "lucide-zap", classValue, className]}
     {...(!title && !children && { "aria-hidden": "true" })}
   >
     if (title) {

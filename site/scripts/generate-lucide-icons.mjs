@@ -90,9 +90,6 @@ function generateModule(iconNames) {
     `  children?: any\n` +
     `  [key: string]: any\n` +
     `}\n\n` +
-    `function mergeClasses(...classes: Array<string | undefined | null>) {\n` +
-    `  return classes.filter(Boolean).join(" ")\n` +
-    `}\n\n` +
     `function getStrokeWidth(size: string | number, strokeWidth: string | number, absoluteStrokeWidth: boolean) {\n` +
     `  return absoluteStrokeWidth ? (Number(strokeWidth) * 24) / Number(size) : strokeWidth\n` +
     `}\n\n` +
@@ -128,7 +125,7 @@ function generateIconExport(name) {
     `    stroke-width={computedStrokeWidth}\n` +
     `    stroke-linecap="round"\n` +
     `    stroke-linejoin="round"\n` +
-    `    class={mergeClasses("lucide-icon", "lucide", "lucide-${iconClass}", classValue, className)}\n` +
+    `    class={["lucide-icon", "lucide", "lucide-${iconClass}", classValue, className]}\n` +
     `    {...(!title && !children && { "aria-hidden": "true" })}\n` +
     `  >\n` +
     `    if (title) {\n` +

@@ -222,10 +222,6 @@ function animateHtml(html: string, props: StreamdownProps, prevContentLength: nu
   }
 }
 
-function mergeClasses(...classes: Array<string | undefined | false>) {
-  return classes.filter(Boolean).join(" ")
-}
-
 function DefaultBlockSkeleton(_props: StreamdownBlockRenderProps) {
   return (
     <div class="ripple-streamdown-block-skeleton" data-ripple-streamdown-block-skeleton="">
@@ -496,13 +492,13 @@ export function Streamdown(props: StreamdownProps) {
 
   return (
     <div
-      class={mergeClasses(
+      class={[
         "ripple-streamdown",
         mode.value === "streaming" && "ripple-streamdown-streaming",
         shouldShowCaret.value && "ripple-streamdown-with-caret",
         props.class,
         props.className
-      )}
+      ]}
       data-ripple-streamdown=""
       data-mode={mode.value}
       dir={direction.value}

@@ -9,6 +9,7 @@ import {
 } from "./controller"
 
 export type StickToBottomProps = StickToBottomOptions & {
+  bottomInset?: number | string
   children?: unknown
   class?: string
   className?: string
@@ -20,8 +21,7 @@ export type StickToBottomProps = StickToBottomOptions & {
   scrollClass?: string
   scrollClassName?: string
   scrollRef?: (element: HTMLElement | null) => void
-  style?: string
-  bottomInset?: number | string
+  style?: string | Record<string, string | number | undefined>
 }
 
 function getInsetValue(value: number | string | undefined) {
@@ -42,10 +42,6 @@ function getOptions(props: StickToBottomProps): StickToBottomOptions {
     stiffness: props.stiffness,
     targetScrollTop: props.targetScrollTop,
   }
-}
-
-function mergeStyle(base: string, style: string | undefined) {
-  return style ? `${base};${style}` : base
 }
 
 export function createStickToBottom(options?: StickToBottomOptions) {
@@ -81,28 +77,42 @@ export function StickToBottom(props: StickToBottomProps) {
   }
   const bottomInset = getInsetValue(props.bottomInset)
 
-  return (
+  return <>
     <div
-      class={["ripple-stick-to-bottom", props.class, props.className, props.scrollClass, props.scrollClassName]
-        .filter(Boolean)
-        .join(" ")}
+      class={["ripple-stick-to-bottom", props.class, props.className, props.scrollClass, props.scrollClassName]}
       ref={setScrollElement}
-      style={mergeStyle("height:100%;overflow:auto;scrollbar-gutter:stable both-edges;width:100%", props.style)}
+      style={props.style}
     >
-      <div
-        class={["ripple-stick-to-bottom-content", props.contentClass, props.contentClassName]
-          .filter(Boolean)
-          .join(" ")}
-        ref={setContentElement}
-        style="min-height:100%"
-      >
+      <div class={["ripple-stick-to-bottom-content", props.contentClass, props.contentClassName]} ref={setContentElement}>
         {props.children}
         if (bottomInset) {
-          <div class="ripple-stick-to-bottom-spacer" style={`flex-shrink:0;height:${bottomInset}`} aria-hidden="true" />
+          <div
+            class="ripple-stick-to-bottom-spacer"
+            style={{ "--ripple-stick-to-bottom-inset": bottomInset }}
+            aria-hidden="true"
+          />
         }
       </div>
     </div>
-  )
+
+    <style>
+      .ripple-stick-to-bottom {
+        height: 100%;
+        overflow: auto;
+        scrollbar-gutter: stable both-edges;
+        width: 100%;
+      }
+
+      .ripple-stick-to-bottom-content {
+        min-height: 100%;
+      }
+
+      .ripple-stick-to-bottom-spacer {
+        flex-shrink: 0;
+        height: var(--ripple-stick-to-bottom-inset);
+      }
+    </style>
+  </>
 }
 
 export type {
