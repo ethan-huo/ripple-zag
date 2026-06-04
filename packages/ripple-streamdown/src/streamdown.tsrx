@@ -30,9 +30,9 @@ export type StreamdownProps = StreamdownOptions & {
   class?: string
   className?: string
   animated?: boolean | StreamdownAnimateOptions
-  blockError?: Component<StreamdownBlockErrorProps>
-  blockSkeleton?: Component<StreamdownBlockRenderProps>
   dir?: "auto" | "ltr" | "rtl"
+  error?: Component<StreamdownBlockErrorProps>
+  loading?: Component<StreamdownBlockRenderProps>
   parseMarkdownIntoBlocksFn?: (markdown: string) => string[]
   plugins?: StreamdownPlugins
 }
@@ -222,7 +222,7 @@ function animateHtml(html: string, props: StreamdownProps, prevContentLength: nu
   }
 }
 
-function DefaultBlockSkeleton(_props: StreamdownBlockRenderProps) {
+function DefaultLoading(_props: StreamdownBlockRenderProps) {
   return (
     <div class="ripple-streamdown-block-skeleton" data-ripple-streamdown-block-skeleton="">
       <div class="ripple-streamdown-block-skeleton-header" />
@@ -234,7 +234,7 @@ function DefaultBlockSkeleton(_props: StreamdownBlockRenderProps) {
   )
 }
 
-function DefaultBlockError(props: StreamdownBlockErrorProps) {
+function DefaultError(props: StreamdownBlockErrorProps) {
   const message = props.error instanceof Error ? props.error.message : "Unable to render block."
 
   return (
@@ -402,31 +402,30 @@ function detectTextDirection(text: string) {
   return "ltr"
 }
 
-function RendererFallbackBlock(props: {
+function RendererLoadingBlock(props: {
   block: StreamdownCodeBlock
-  fallback?: StreamdownBlockRenderer["fallback"]
+  loading?: Component<StreamdownBlockRenderProps>
 }) {
-  if (props.fallback) {
-    const FallbackComponent = track(() => props.fallback!)
+  if (props.loading) {
+    const LoadingComponent = track(() => props.loading!)
 
-    return <@FallbackComponent block={props.block} />
+    return <@LoadingComponent block={props.block} />
   }
 
-  return <DefaultBlockSkeleton block={props.block} />
+  return <DefaultLoading block={props.block} />
 }
 
 function RendererBlock(props: {
   block: StreamdownCodeBlock
-  blockError?: Component<StreamdownBlockErrorProps>
-  blockSkeleton?: Component<StreamdownBlockRenderProps>
+  error?: Component<StreamdownBlockErrorProps>
+  loading?: Component<StreamdownBlockRenderProps>
   renderer: StreamdownBlockRenderer
 }) {
-  const fallback = props.renderer.fallback ?? props.blockSkeleton
-  const errorComponent = props.blockError ?? DefaultBlockError
+  const errorComponent = props.error ?? DefaultError
   const ErrorComponent = track(() => errorComponent)
 
   if (props.block.isStreamingTail) {
-    return <RendererFallbackBlock block={props.block} fallback={fallback} />
+    return <RendererLoadingBlock block={props.block} loading={props.loading} />
   }
 
   const RendererComponent = track(() => props.renderer.component)
@@ -436,7 +435,7 @@ function RendererBlock(props: {
       try {
         <@RendererComponent block={props.block} />
       } pending {
-        <RendererFallbackBlock block={props.block} fallback={fallback} />
+        <RendererLoadingBlock block={props.block} loading={props.loading} />
       } catch (error) {
         <@ErrorComponent block={props.block} error={error} />
       }
@@ -509,8 +508,8 @@ export function Streamdown(props: StreamdownProps) {
         if (block.type === "renderer") {
           <RendererBlock
             block={block.block}
-            blockError={props.blockError}
-            blockSkeleton={props.blockSkeleton}
+            error={props.error}
+            loading={props.loading}
             renderer={block.renderer}
           />
         } else {

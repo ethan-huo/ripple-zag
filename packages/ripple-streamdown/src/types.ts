@@ -14,7 +14,6 @@ export type StreamdownBlockRenderProps = {
 
 export type StreamdownBlockRenderer = {
   component: Component<StreamdownBlockRenderProps>
-  fallback?: Component<StreamdownBlockRenderProps>
   language?: string | string[]
   match?: (block: StreamdownCodeBlock) => boolean
   name: string
