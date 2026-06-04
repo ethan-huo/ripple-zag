@@ -1,7 +1,7 @@
 import * as popover from "@zag-js/popover"
 import * as select from "@zag-js/select"
 import { Portal, track } from "ripple"
-import { Streamdown } from "ripple-streamdown"
+import { createMermaidPlugin, Streamdown } from "ripple-streamdown"
 import { normalizeProps, useMachine } from "zag-ripple"
 import { Button } from "../components/ui/button.tsrx"
 import { Navigation } from "../components/navigation.tsrx"
@@ -11,9 +11,9 @@ import { streamdownSample } from "./streamdown-sample"
 type PlaygroundMode = "static" | "streaming"
 type CaretMode = "block" | "circle" | "none"
 type AnimatedMode = "on" | "off"
-type AnimationEffect = "fade" | "blur" | "slide"
+type AnimationEffect = "fadeIn" | "blurIn" | "slideUp"
 type AnimationEasing = "ease" | "ease-out" | "linear"
-type AnimationSplitBy = "word" | "character"
+type AnimationSplitBy = "word" | "char"
 type SelectOption<T extends string> = {
   label: string
   value: T
@@ -36,9 +36,9 @@ const caretOptions: SelectOption<CaretMode>[] = [
 ]
 
 const effectOptions: SelectOption<AnimationEffect>[] = [
-  { label: "Fade in", value: "fade" },
-  { label: "Blur in", value: "blur" },
-  { label: "Slide up", value: "slide" },
+  { label: "Fade in", value: "fadeIn" },
+  { label: "Blur in", value: "blurIn" },
+  { label: "Slide up", value: "slideUp" },
 ]
 
 const easingOptions: SelectOption<AnimationEasing>[] = [
@@ -49,8 +49,12 @@ const easingOptions: SelectOption<AnimationEasing>[] = [
 
 const splitByOptions: SelectOption<AnimationSplitBy>[] = [
   { label: "Word", value: "word" },
-  { label: "Character", value: "character" },
+  { label: "Character", value: "char" },
 ]
+
+const streamdownPlugins = {
+  mermaid: createMermaidPlugin(),
+}
 
 function PlaygroundSelect<T extends string>(props: {
   id: string
@@ -246,7 +250,7 @@ export function StreamdownPlayground() {
   const animated = track<AnimatedMode>("off")
   const animationDuration = track(150)
   const animationEasing = track<AnimationEasing>("ease")
-  const animationEffect = track<AnimationEffect>("fade")
+  const animationEffect = track<AnimationEffect>("fadeIn")
   const animationSplitBy = track<AnimationSplitBy>("word")
   const streamSpeed = track(30)
   const isStreaming = track(false)
@@ -382,14 +386,16 @@ export function StreamdownPlayground() {
               <Streamdown
                 value={mode.value === "streaming" ? markdownOutput.value : markdown.value}
                 mode={mode.value}
+                plugins={streamdownPlugins}
                 isAnimating={isStreaming.value}
-                animated={animated.value === "on"}
-                animation={{
-                  duration: animationDuration.value,
-                  easing: animationEasing.value,
-                  effect: animationEffect.value,
-                  splitBy: animationSplitBy.value,
-                }}
+                animated={animated.value === "on"
+                  ? {
+                    animation: animationEffect.value,
+                    duration: animationDuration.value,
+                    easing: animationEasing.value,
+                    sep: animationSplitBy.value,
+                  }
+                  : false}
                 caret={caret.value === "none" ? undefined : caret.value}
               />
             </div>

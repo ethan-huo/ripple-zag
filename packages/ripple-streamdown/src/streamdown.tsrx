@@ -1,31 +1,119 @@
-import { effect, track } from "ripple"
+import { Fragment, track, trackAsync } from "ripple"
 import type { MermaidConfig } from "mermaid"
 import {
+  completeMarkdown,
+  type MarkdownRenderCache,
+  parseMarkdownIntoBlocks,
   renderMarkdownToHtml,
   type StreamdownCaret,
   type StreamdownMode,
   type StreamdownOptions,
 } from "./core"
 
+export type StreamdownCodeBlock = {
+  code: string
+  isStreamingTail: boolean
+  language: string
+  meta?: string
+  source: string
+}
+
+export type StreamdownBlockRenderProps = {
+  block: StreamdownCodeBlock
+}
+
+export type StreamdownBlockRendererResult = string | Promise<string>
+
+export type StreamdownBlockRenderer = {
+  fallback?: (props: StreamdownBlockRenderProps) => unknown
+  language?: string | string[]
+  match?: (block: StreamdownCodeBlock) => boolean
+  name: string
+  render: (props: StreamdownBlockRenderProps) => StreamdownBlockRendererResult
+}
+
+export type StreamdownDiagramPlugin = {
+  getMermaid: (config?: MermaidConfig) => {
+    initialize: (config: MermaidConfig) => void
+    render: (id: string, source: string) => Promise<{ svg: string }>
+  }
+  language: string
+  name: "mermaid"
+  type: "diagram"
+}
+
+export type StreamdownPlugins = {
+  mermaid?: StreamdownDiagramPlugin
+  renderers?: StreamdownBlockRenderer[]
+}
+
+export type StreamdownAnimateOptions = {
+  animation?: "fadeIn" | "blurIn" | "slideUp" | (string & {})
+  duration?: number
+  easing?: string
+  sep?: "word" | "char"
+  stagger?: number
+}
+
+export type StreamdownMermaidOptions = {
+  config?: MermaidConfig
+  errorComponent?: (props: StreamdownMermaidErrorProps) => unknown
+}
+
 export type StreamdownProps = StreamdownOptions & {
   value?: string
   children?: string
   class?: string
   className?: string
-  animated?: boolean
-  animation?: {
-    duration?: number
-    easing?: string
-    effect?: "fade" | "blur" | "slide"
-    splitBy?: "word" | "character"
-  }
-  mermaid?: {
-    config?: MermaidConfig
-  }
+  animated?: boolean | StreamdownAnimateOptions
+  blockError?: (props: StreamdownBlockErrorProps) => unknown
+  blockSkeleton?: (props: StreamdownBlockRenderProps) => unknown
+  dir?: "auto" | "ltr" | "rtl"
+  mermaid?: StreamdownMermaidOptions
+  parseMarkdownIntoBlocksFn?: (markdown: string) => string[]
+  plugins?: StreamdownPlugins
 }
 
 let mermaidModulePromise: Promise<typeof import("mermaid")> | null = null
 let mermaidId = 0
+const maxRenderCacheSize = 256
+const codeFencePattern = /^```([^\s`]*)?([^\n`]*)\n([\s\S]*?)(?:\n```)?\s*$/
+const htmlTagPattern = /<[^>]*>/g
+const whitespacePattern = /\s/
+const whitespaceOnlyPattern = /^\s+$/
+const skipAnimationTags = new Set(["annotation", "code", "math", "pre", "svg"])
+
+export type StreamdownBlockErrorProps = StreamdownBlockRenderProps & {
+  error: unknown
+}
+
+export type StreamdownMermaidErrorProps = {
+  chart: string
+  error: string
+  retry: () => void
+}
+
+type StreamdownMarkdownRenderBlock = {
+  html: string
+  index: number
+  key: string
+  source: string
+  type: "markdown"
+}
+
+type StreamdownPluginRenderBlock = {
+  block: StreamdownCodeBlock
+  index: number
+  key: string
+  renderer: StreamdownBlockRenderer
+  type: "renderer"
+}
+
+type StreamdownRenderBlock = StreamdownMarkdownRenderBlock | StreamdownPluginRenderBlock
+type StreamdownAnimationState = Map<string, {
+  charCount: number
+  sourceLength: number
+}>
 
 function getContent(props: StreamdownProps) {
   if (typeof props.value === "string") {
@@ -43,83 +131,183 @@ function getCaretText(caret: StreamdownCaret) {
   return caret === "circle" ? "●" : "▋"
 }
 
-function getCaretHtml(caret: StreamdownCaret) {
-  return `<span class="ripple-streamdown-caret" aria-hidden="true">${getCaretText(caret)}</span>`
+function getAnimationOptions(props: StreamdownProps): StreamdownAnimateOptions | undefined {
+  return props.animated && typeof props.animated === "object" ? props.animated : undefined
 }
 
-function getLastContentInsertionIndex(html: string) {
-  const trailingWhitespace = html.match(/\s*$/)?.[0] ?? ""
-  const body = html.slice(0, html.length - trailingWhitespace.length)
-  const closeTargets = [
-    "</code></pre>",
-    "</p>",
-    "</li>",
-    "</h1>",
-    "</h2>",
-    "</h3>",
-    "</h4>",
-    "</h5>",
-    "</h6>",
-    "</td>",
-    "</th>",
-  ]
+function getAnimationStyle(props: StreamdownProps, skipAnimation: boolean, delay: number) {
+  const options = getAnimationOptions(props)
+  const animation = options?.animation ?? "fadeIn"
+  const duration = Math.max(0, options?.duration ?? 150)
+  const easing = options?.easing ?? "ease"
+  const style = `--sd-animation:sd-${animation};--sd-duration:${skipAnimation ? 0 : duration}ms;--sd-easing:${easing};`
 
-  let insertionIndex = -1
+  return delay > 0 ? `${style}--sd-delay:${delay}ms;` : style
+}
 
-  for (const closeTarget of closeTargets) {
-    const index = body.lastIndexOf(closeTarget)
+function splitTextByWord(text: string) {
+  const parts: string[] = []
+  let current = ""
+  let inWhitespace = false
 
-    if (index > insertionIndex) {
-      insertionIndex = index
+  for (const character of text) {
+    const isWhitespace = whitespacePattern.test(character)
+
+    if (isWhitespace !== inWhitespace && current) {
+      parts.push(current)
+      current = ""
     }
+
+    current += character
+    inWhitespace = isWhitespace
   }
+
+  if (current) {
+    parts.push(current)
+  }
+
+  return parts
+}
+
+function splitTextByCharacter(text: string) {
+  const parts: string[] = []
+  let whitespaceBuffer = ""
+
+  for (let index = 0; index < text.length; index += 1) {
+    const entityMatch = text.slice(index).match(/^&[#\w]+;/)
+    const part = entityMatch?.[0] ?? text[index]
+
+    if (whitespacePattern.test(part)) {
+      whitespaceBuffer += part
+    } else {
+      if (whitespaceBuffer) {
+        parts.push(whitespaceBuffer)
+        whitespaceBuffer = ""
+      }
+
+      parts.push(part)
+    }
+
+    index += part.length - 1
+  }
+
+  if (whitespaceBuffer) {
+    parts.push(whitespaceBuffer)
+  }
+
+  return parts
+}
+
+function getHtmlTagName(tag: string) {
+  return tag.match(/^<\/?\s*([a-zA-Z0-9:-]+)/)?.[1]?.toLowerCase()
+}
+
+function getAnimationSkipDelta(tag: string) {
+  const tagName = getHtmlTagName(tag)
+
+  if (!tagName || !skipAnimationTags.has(tagName) || tag.endsWith("/>")) {
+    return 0
+  }
+
+  return tag.startsWith("</") ? -1 : 1
+}
+
+function animateTextSegment(
+  text: string,
+  props: StreamdownProps,
+  counters: { charCount: number; newTokenCount: number },
+  prevContentLength: number,
+) {
+  const options = getAnimationOptions(props)
+  const parts = options?.sep === "char" ? splitTextByCharacter(text) : splitTextByWord(text)
+
+  return parts.map((part) => {
+    const partStart = counters.charCount
+    counters.charCount += part.length
+
+    if (whitespaceOnlyPattern.test(part)) {
+      return part
+    }
+
+    const skipAnimation = prevContentLength > 0 && partStart < prevContentLength
+    const stagger = Math.max(0, options?.stagger ?? 40)
+    const delay = skipAnimation ? 0 : counters.newTokenCount * stagger
+    const style = getAnimationStyle(props, skipAnimation, delay)
+
+    counters.newTokenCount += 1
+
+    return `<span data-sd-animate="true" style="${style}">${part}</span>`
+  }).join("")
+}
+
+function animateHtml(html: string, props: StreamdownProps, prevContentLength: number) {
+  const counters = { charCount: 0, newTokenCount: 0 }
+  const chunks: string[] = []
+  let skipDepth = 0
+  let lastIndex = 0
+
+  for (const match of html.matchAll(htmlTagPattern)) {
+    const index = match.index ?? 0
+    const text = html.slice(lastIndex, index)
+
+    chunks.push(skipDepth > 0
+      ? text
+      : animateTextSegment(text, props, counters, prevContentLength))
+
+    const tag = match[0]
+    chunks.push(tag)
+    skipDepth = Math.max(0, skipDepth + getAnimationSkipDelta(tag))
+    lastIndex = index + tag.length
+  }
+
+  const trailingText = html.slice(lastIndex)
+  chunks.push(skipDepth > 0
+    ? trailingText
+    : animateTextSegment(trailingText, props, counters, prevContentLength))
 
   return {
-    body,
-    insertionIndex: insertionIndex === -1 ? body.length : insertionIndex,
-    trailingWhitespace,
+    charCount: counters.charCount,
+    html: chunks.join(""),
   }
-}
-
-function getAnimationStyle(props: StreamdownProps) {
-  const duration = Math.max(0, props.animation?.duration ?? 150)
-  const easing = props.animation?.easing ?? "ease"
-
-  return `--ripple-streamdown-token-duration:${duration}ms;--ripple-streamdown-token-easing:${easing};`
-}
-
-function animateLastTextSegment(html: string, props: StreamdownProps) {
-  const { body, insertionIndex, trailingWhitespace } = getLastContentInsertionIndex(html)
-  const beforeInsertion = body.slice(0, insertionIndex)
-  const afterInsertion = body.slice(insertionIndex)
-  const lastTagEnd = beforeInsertion.lastIndexOf(">")
-  const textStart = lastTagEnd + 1
-  const text = beforeInsertion.slice(textStart)
-
-  if (!text.trim()) {
-    return html
-  }
-
-  const pattern = props.animation?.splitBy === "character" ? /(\S)(\s*)$/ : /(\S+)(\s*)$/
-  const effect = props.animation?.effect ?? "fade"
-  const style = getAnimationStyle(props)
-  const animatedText = text.replace(
-    pattern,
-    `<span class="ripple-streamdown-token" data-effect="${effect}" style="${style}">$1</span>$2`
-  )
-
-  return `${beforeInsertion.slice(0, textStart)}${animatedText}${afterInsertion}${trailingWhitespace}`
-}
-
-function insertCaretIntoHtml(html: string, caret: StreamdownCaret) {
-  const { body, insertionIndex, trailingWhitespace } = getLastContentInsertionIndex(html)
-  const caretHtml = getCaretHtml(caret)
-
-  return `${body.slice(0, insertionIndex)}${caretHtml}${body.slice(insertionIndex)}${trailingWhitespace}`
 }
 
 function mergeClasses(...classes: Array<string | undefined | false>) {
   return classes.filter(Boolean).join(" ")
+}
+
+function DefaultBlockSkeleton(_props: StreamdownBlockRenderProps) {
+  return (
+    <div class="ripple-streamdown-block-skeleton" data-ripple-streamdown-block-skeleton="">
+      <div class="ripple-streamdown-block-skeleton-header" />
+      <div class="ripple-streamdown-block-skeleton-body">
+        <span class="ripple-streamdown-block-skeleton-spinner" aria-hidden="true" />
+        <span class="ripple-streamdown-visually-hidden">{"Loading block"}</span>
+      </div>
+    </div>
+  )
+}
+
+function DefaultBlockError(props: StreamdownBlockErrorProps) {
+  const message = props.error instanceof Error ? props.error.message : "Unable to render block."
+
+  return (
+    <div class="ripple-streamdown-block-error" data-ripple-streamdown-block-error="">
+      <strong>{"Block render failed"}</strong>
+      <pre>{message}</pre>
+    </div>
+  )
+}
+
+function pruneRenderCache(cache: MarkdownRenderCache) {
+  while (cache.size > maxRenderCacheSize) {
+    const oldestKey = cache.keys().next().value
+
+    if (oldestKey === undefined) {
+      return
+    }
+
+    cache.delete(oldestKey)
+  }
 }
 
 function getMermaidModule() {
@@ -127,100 +315,319 @@ function getMermaidModule() {
   return mermaidModulePromise
 }
 
-async function renderMermaidBlocks(root: HTMLElement, config?: MermaidConfig) {
-  const blocks = Array.from(root.querySelectorAll("pre > code.language-mermaid"))
-
-  if (blocks.length === 0) {
-    return
+function getRendererLanguageMatches(renderer: StreamdownBlockRenderer, language: string) {
+  if (!renderer.language) {
+    return false
   }
 
-  const mermaidModule = await getMermaidModule()
-  const mermaid = mermaidModule.default
+  if (Array.isArray(renderer.language)) {
+    return renderer.language.includes(language)
+  }
 
-  mermaid.initialize({
-    startOnLoad: false,
-    securityLevel: "strict",
-    ...config,
-  })
+  return renderer.language === language
+}
 
-  for (const block of blocks) {
-    const pre = block.parentElement
+function getMermaidRenderer(plugin: StreamdownDiagramPlugin, config?: MermaidConfig): StreamdownBlockRenderer {
+  return {
+    language: plugin.language,
+    name: plugin.name,
+    async render(props) {
+      const mermaid = plugin.getMermaid(config)
+      const result = await mermaid.render(`ripple-streamdown-mermaid-${mermaidId++}`, props.block.code)
 
-    if (!pre || pre.dataset.rippleStreamdownMermaid === "rendered") {
-      continue
-    }
-
-    pre.dataset.rippleStreamdownMermaid = "rendered"
-    const source = block.textContent ?? ""
-    const container = document.createElement("div")
-    container.className = "ripple-streamdown-mermaid"
-
-    try {
-      const result = await mermaid.render(`ripple-streamdown-mermaid-${mermaidId++}`, source)
-      container.innerHTML = result.svg
-    } catch (error) {
-      container.classList.add("ripple-streamdown-mermaid-error")
-      container.textContent = error instanceof Error ? error.message : "Unable to render Mermaid diagram."
-    }
-
-    pre.replaceWith(container)
+      return result.svg
+    },
   }
 }
 
-export function Streamdown(props: StreamdownProps) {
-  const root = track<HTMLElement | null>(null)
-  const html = track(() =>
-    renderMarkdownToHtml(getContent(props), {
-      parseIncompleteMarkdown: props.parseIncompleteMarkdown,
-      remend: props.remend,
-    })
+function getBlockRenderers(props: StreamdownProps) {
+  const renderers = props.plugins?.renderers ?? []
+  const mermaidPlugin = props.plugins?.mermaid
+
+  if (!mermaidPlugin) {
+    return renderers
+  }
+
+  return [
+    ...renderers,
+    getMermaidRenderer(mermaidPlugin, props.mermaid?.config),
+  ]
+}
+
+function findBlockRenderer(block: StreamdownCodeBlock, props: StreamdownProps) {
+  const renderers = getBlockRenderers(props)
+
+  return renderers.find((renderer) =>
+    getRendererLanguageMatches(renderer, block.language) || Boolean(renderer.match?.(block))
   )
-  const mode = track<StreamdownMode>(() => props.mode ?? "static")
-  const shouldShowCaret = track(() => Boolean(props.caret && props.isAnimating))
-  const displayHtml = track(() => {
-    const htmlWithAnimation = props.isAnimating && props.animated !== false
-      ? animateLastTextSegment(html.value, props)
-      : html.value
+}
 
-    if (!shouldShowCaret.value || !props.caret) {
-      return htmlWithAnimation
-    }
+function hasIncompleteCodeFence(source: string) {
+  const fenceCount = source.match(/```/g)?.length ?? 0
 
-    return insertCaretIntoHtml(htmlWithAnimation, props.caret)
+  return fenceCount % 2 === 1
+}
+
+function hasTable(source: string) {
+  return /(^|\n)\|.+\|\n\|[\s:-]+\|/m.test(source)
+}
+
+function parseCodeFenceBlock(source: string): Omit<StreamdownCodeBlock, "isStreamingTail"> | null {
+  const match = source.match(codeFencePattern)
+
+  if (!match) {
+    return null
+  }
+
+  const language = match[1]?.trim() ?? ""
+  const meta = match[2]?.trim() || undefined
+
+  return {
+    code: match[3] ?? "",
+    language,
+    meta,
+    source,
+  }
+}
+
+function renderCachedMarkdownBlock(
+  source: string,
+  options: StreamdownOptions,
+  cache: MarkdownRenderCache,
+) {
+  const cached = cache.get(source)
+
+  if (cached !== undefined) {
+    return cached
+  }
+
+  const html = renderMarkdownToHtml(source, {
+    ...options,
+    parseIncompleteMarkdown: false,
   })
 
-  effect(() => {
-    const node = root.value
-    const htmlVersion = displayHtml.value
+  cache.set(source, html)
+  return html
+}
 
-    if (!node) {
-      return
+function createRenderBlocks(
+  props: StreamdownProps,
+  cache: MarkdownRenderCache,
+  animationState: StreamdownAnimationState,
+) {
+  const content = getContent(props)
+  const shouldParseIncompleteMarkdown = props.parseIncompleteMarkdown ?? true
+  const completedMarkdown = shouldParseIncompleteMarkdown
+    ? completeMarkdown(content, props.remend)
+    : content
+  const parseBlocks = props.parseMarkdownIntoBlocksFn ?? parseMarkdownIntoBlocks
+  const rawBlocks = parseBlocks(completedMarkdown)
+  const lastBlockIndex = rawBlocks.length - 1
+
+  return rawBlocks.map((source, index): StreamdownRenderBlock => {
+    const codeBlock = parseCodeFenceBlock(source)
+
+    if (codeBlock) {
+      const block = {
+        ...codeBlock,
+        isStreamingTail: Boolean(props.isAnimating && index === lastBlockIndex),
+      }
+      const renderer = findBlockRenderer(block, props)
+
+      if (renderer) {
+        return {
+          block,
+          index,
+          key: String(index),
+          renderer,
+          type: "renderer",
+        }
+      }
     }
 
-    node.innerHTML = htmlVersion
+    const baseHtml = renderCachedMarkdownBlock(source, props, cache)
+    const isLastBlock = index === lastBlockIndex
+    const shouldAnimateBlock = isLastBlock && props.isAnimating && props.animated !== false
+    const key = String(index)
+    const previousAnimationState = animationState.get(key)
+    const prevContentLength = previousAnimationState && source.length >= previousAnimationState.sourceLength
+      ? previousAnimationState.charCount
+      : 0
+    const animationResult = shouldAnimateBlock
+      ? animateHtml(baseHtml, props, prevContentLength)
+      : undefined
 
-    if (props.isAnimating) {
-      return
+    if (animationResult) {
+      animationState.set(key, {
+        charCount: animationResult.charCount,
+        sourceLength: source.length,
+      })
     }
 
-    queueMicrotask(() => {
-      void htmlVersion
-      void renderMermaidBlocks(node, props.mermaid?.config)
-    })
+    return {
+      html: animationResult?.html ?? baseHtml,
+      index,
+      key,
+      source,
+      type: "markdown",
+    }
+  })
+}
+
+export function createMermaidPlugin(config?: MermaidConfig): StreamdownDiagramPlugin {
+  return {
+    getMermaid(nextConfig?: MermaidConfig) {
+      return {
+        initialize(mermaidConfig) {
+          void mermaidConfig
+        },
+        async render(id, source) {
+          const mermaidModule = await getMermaidModule()
+          const mermaid = mermaidModule.default
+
+          mermaid.initialize({
+            startOnLoad: false,
+            securityLevel: "strict",
+            ...config,
+            ...nextConfig,
+          })
+
+          return mermaid.render(id, source)
+        },
+      }
+    },
+    language: "mermaid",
+    name: "mermaid",
+    type: "diagram",
+  }
+}
+
+function detectTextDirection(text: string) {
+  if (/[\u0590-\u08ff]/.test(text)) {
+    return "rtl"
+  }
+
+  return "ltr"
+}
+
+function RendererFallbackBlock(props: {
+  block: StreamdownCodeBlock
+  fallback?: (props: StreamdownBlockRenderProps) => unknown
+}) {
+  const renderProps = { block: props.block }
+
+  if (props.fallback) {
+    return <>{props.fallback(renderProps)}</>
+  }
+
+  return <DefaultBlockSkeleton block={props.block} />
+}
+
+function RendererBlock(props: {
+  block: StreamdownCodeBlock
+  blockError?: (props: StreamdownBlockErrorProps) => unknown
+  blockSkeleton?: (props: StreamdownBlockRenderProps) => unknown
+  renderer: StreamdownBlockRenderer
+}) {
+  const renderProps = { block: props.block }
+  const fallback = props.renderer.fallback ?? props.blockSkeleton
+  const errorComponent = props.blockError ?? DefaultBlockError
+
+  if (props.block.isStreamingTail) {
+    return <RendererFallbackBlock block={props.block} fallback={fallback} />
+  }
+
+  const html = trackAsync(() => Promise.resolve(props.renderer.render(renderProps)))
+
+  return (
+    <div class="ripple-streamdown-renderer-block" data-ripple-streamdown-renderer-block={props.renderer.name}>
+      try {
+        <Fragment innerHTML={html.value} />
+      } pending {
+        <RendererFallbackBlock block={props.block} fallback={fallback} />
+      } catch (error) {
+        {errorComponent({ ...renderProps, error })}
+      }
+    </div>
+  )
+}
+
+export function Streamdown(props: StreamdownProps) {
+  const renderCache: MarkdownRenderCache = new Map()
+  const animationState: StreamdownAnimationState = new Map()
+  const mode = track<StreamdownMode>(() => props.mode ?? "streaming")
+  const blocks = track(() => {
+    const renderedBlocks = createRenderBlocks(props, renderCache, animationState)
+
+    pruneRenderCache(renderCache)
+
+    return renderedBlocks
+  })
+  const shouldShowCaret = track(() => {
+    if (!(mode.value === "streaming" && props.isAnimating && props.caret)) {
+      return false
+    }
+
+    const lastBlock = blocks.value.at(-1)
+
+    if (!lastBlock) {
+      return true
+    }
+
+    if (lastBlock.type === "renderer") {
+      return false
+    }
+
+    const lastSource = lastBlock.source
+
+    return !(hasIncompleteCodeFence(lastSource) || hasTable(lastSource))
+  })
+  const caretStyle = track(() => {
+    if (!(shouldShowCaret.value && props.caret)) {
+      return undefined
+    }
+
+    // Match Streamdown's root-level caret: CSS owns the marker so markdown HTML
+    // can stay cacheable and completed blocks keep their DOM identity.
+    return { "--ripple-streamdown-caret": `" ${getCaretText(props.caret)}"` }
+  })
+  const direction = track(() => {
+    if (!props.dir) {
+      return undefined
+    }
+
+    return props.dir === "auto" ? detectTextDirection(getContent(props)) : props.dir
   })
 
   return (
     <div
-      ref={root}
       class={mergeClasses(
         "ripple-streamdown",
         mode.value === "streaming" && "ripple-streamdown-streaming",
+        shouldShowCaret.value && "ripple-streamdown-with-caret",
         props.class,
         props.className
       )}
       data-ripple-streamdown=""
       data-mode={mode.value}
+      dir={direction.value}
+      style={caretStyle.value}
     >
+      for (const block of blocks.value; index index; key block.key) {
+        if (block.type === "renderer") {
+          <RendererBlock
+            block={block.block}
+            blockError={props.blockError}
+            blockSkeleton={props.blockSkeleton}
+            renderer={block.renderer}
+          />
+        } else {
+          <Fragment innerHTML={block.html} />
+        }
+      }
+      if (blocks.value.length === 0 && shouldShowCaret.value) {
+        <span aria-hidden="true" />
+      }
     </div>
   )
 }

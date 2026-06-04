@@ -37,6 +37,25 @@ bun --filter ./site build
 bun --filter ./site icons:generate
 ```
 
+## Browser Verification
+
+When a task needs browser-based verification, first refresh the source-of-truth
+API surface with:
+
+```bash
+ctx read https://bun.com/docs/runtime/webview 2>&1
+```
+
+Prefer `Bun.WebView` for lightweight local smoke tests of the demo site before
+reaching for Playwright or opening many user-visible browser tabs. Use an
+ephemeral view and, when Chrome-specific behavior matters, force a fresh
+headless Chrome backend with `backend: { type: "chrome", url: false }` so the
+test does not attach to the user's existing Chrome session. Capture page
+console errors and use `evaluate()` for DOM assertions such as wrapper counts,
+caret state, and rendered SVG presence. `Bun.WebView` is experimental, so fall
+back to Playwright only when the test needs its runner, tracing, multi-context,
+or broader cross-browser features.
+
 ## Release Model
 
 This package is not published to npm. Releases are distributed as GitHub

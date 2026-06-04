@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import {
   completeMarkdown,
   parseMarkdownIntoBlocks,
+  renderMarkdownBlocksToHtml,
   renderMarkdownToHtml,
 } from "../src/core"
 
@@ -43,4 +44,21 @@ test("renderMarkdownToHtml strips unsafe script content", () => {
 
   expect(html).not.toContain("javascript:")
   expect(html).not.toContain("<script")
+})
+
+test("renderMarkdownBlocksToHtml reuses cached stable blocks", () => {
+  const cache = new Map<string, string>()
+
+  renderMarkdownBlocksToHtml("# Title\n\nFirst paragraph.", undefined, cache)
+
+  const firstEntries = new Map(cache)
+  const html = renderMarkdownBlocksToHtml("# Title\n\nFirst paragraph.\n\nSecond paragraph.", undefined, cache)
+
+  expect(html).toContain("<h1>Title</h1>")
+  expect(html).toContain("<p>Second paragraph.</p>")
+  expect(cache.size).toBeGreaterThan(firstEntries.size)
+
+  for (const [block, renderedHtml] of firstEntries) {
+    expect(cache.get(block)).toBe(renderedHtml)
+  }
 })

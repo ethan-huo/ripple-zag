@@ -1,3 +1,3 @@
 # Backlog
 
-- Streamdown parity: the Ripple playground renders GFM, streaming-safe markdown, KaTeX math, and Mermaid diagrams. It still needs native Shiki code highlighting/controls, Vega/custom renderers, and animated word/character spans before it fully matches https://streamdown.ai/playground.
+- Streamdown parity: the Ripple package now covers streaming-safe markdown blocks, root-level caret, Streamdown-style `animated` options, KaTeX math, Mermaid diagram plugins, and stable completed-block rendering. It still needs native Shiki code highlighting/controls, link-safety controls, and official-style code/table/Mermaid control surfaces before it fully matches https://streamdown.ai/playground.

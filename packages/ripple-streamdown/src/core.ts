@@ -19,6 +19,8 @@ export type RenderMarkdownOptions = {
   remend?: RemendOptions
 }
 
+export type MarkdownRenderCache = Map<string, string>
+
 export type StreamdownOptions = RenderMarkdownOptions & {
   mode?: StreamdownMode
   caret?: StreamdownCaret
@@ -228,4 +230,33 @@ export function renderMarkdownToHtml(markdown: string, options?: RenderMarkdownO
     : markdown
 
   return String(processor.processSync(completedMarkdown))
+}
+
+export function renderMarkdownBlocksToHtml(
+  markdown: string,
+  options?: RenderMarkdownOptions,
+  cache?: MarkdownRenderCache,
+) {
+  const shouldParseIncompleteMarkdown = options?.parseIncompleteMarkdown ?? true
+  const completedMarkdown = shouldParseIncompleteMarkdown
+    ? completeMarkdown(markdown, options?.remend)
+    : markdown
+  const blocks = parseMarkdownIntoBlocks(completedMarkdown)
+
+  return blocks.map((block) => {
+    const cached = cache?.get(block)
+
+    if (cached !== undefined) {
+      return cached
+    }
+
+    const html = renderMarkdownToHtml(block, {
+      ...options,
+      parseIncompleteMarkdown: false,
+    })
+
+    cache?.set(block, html)
+
+    return html
+  }).join("")
 }
