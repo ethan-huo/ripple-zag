@@ -1,0 +1,117 @@
+# Upgrade Playbook
+
+## Known Integration Contracts
+
+- `useMachine` accepts plain props and top-level tracked props. Do not call function props while unwrapping; Zag callbacks and stores often contain functions that must pass through unchanged.
+- Preserve `service.refs` behavior. Many current Zag machines use `refs.get` / `refs.set`; removing the public helper is fine, but removing the service contract breaks real machines.
+- Do not add a Ripple `onMount` adapter helper unless current Ripple/TSRX docs show a concrete need. A plain effect that simulates mount is not a useful public API.
+- Avoid tracked writes inside `track(() => ...)`. If a Zag callback fires during `connect` and updates demo state, defer the write and guard loops.
+- Recursive TSRX demos should pass plain Zag API objects unless a child explicitly expects `Tracked<T>`. Passing a tracked wrapper through `trackSplit` creates an extra `.value` layer and causes runtime API shape errors.
+
+## Demo Fallout Patterns
+
+- Tree View: current Zag APIs may expose different node-state helpers. Verify against installed `@zag-js/tree-view` source before using recalled names. A runtime error like `api.value.getNodeState is not a function` means the demo missed an API rename.
+- Cascade Select: recursive children are plain nodes. If labels disappear, check for accidental `item.value.label` instead of `item.label`.
+- Component list errors reading `label` usually mean a component metadata entry or route lookup returned `undefined`; guard route lookup or fix the metadata list rather than hiding the exception.
+- If a demo callback updates local tracked state during `connect`, defer writes to avoid derived-computation mutation.
+
+## Component Coverage
+
+Compare three sources:
+
+```bash
+rg -n '"@zag-js/' site/package.json packages/zag-ripple/package.json
+ls site/src/components/demos
+sed -n '1,260p' site/src/lib/components.ts
+```
+
+Then check upstream:
+
+```bash
+ctx read https://zagjs.com/llms.txt --no-cache 2>&1
+bun pm view @zag-js/core version
+```
+
+For each new Zag package:
+
+- Add dependency to `site/package.json`.
+- Add a demo under `site/src/components/demos/`.
+- Add component metadata and icon usage.
+- Add CSS under `site/src/styles/` and import it from `site/src/styles/index.css`.
+- Add source-code extraction coverage if `get-component-code.ts` or demo index needs it.
+
+## Icon Generation
+
+The site uses `site/scripts/generate-lucide-icons.mjs` to create `site/src/lib/lucide-icons.tsrx`.
+
+Use this flow:
+
+```bash
+rg -n "lucide-icons|from './lib/lucide-icons|from \"./lib/lucide-icons" site/src
+bun --filter ./site icons:generate
+git diff -- site/src/lib/lucide-icons.tsrx site/scripts/generate-lucide-icons.mjs
+```
+
+If a generated icon is wrong, fix the generator or source icon extraction. Do not manually patch generated output as the durable fix.
+
+## Runtime Validation Without Tab Spam
+
+The user has explicitly asked not to leave many verified tabs open. Prefer one reusable browser page or a script that visits routes serially.
+
+Suggested route source:
+
+```bash
+node -e 'const fs=require("fs"); const text=fs.readFileSync("site/src/lib/components.ts","utf8"); console.log([...text.matchAll(/id:\\s*["'\\''`]([^"'\\''`]+)["'\\''`]/g)].map(m=>`/components/${m[1]}`).join("\\n"))'
+```
+
+Validation should catch:
+
+- uncaught page exceptions
+- console errors
+- blank pages
+- missing labels in visible demo widgets
+- broken deep links like `/components/tree-view`
+
+If using browser tools, reuse or close tabs after each page. If using Playwright, visit routes in one page and collect `pageerror` and `console` events.
+
+## Build/Test Gotchas
+
+- `packages/zag-ripple/tests/dist.test.ts` imports `../dist/index.mjs`; a clean checkout must build before that test. Keep the package `test` script compatible with clean CI.
+- `bun --filter ./site build` may warn about Vite/Ripple scanning; treat warnings as noise unless they become errors.
+- Avoid npm/pnpm. This repository is Bun workspace based.
+
+## Release And Deploy
+
+Package release:
+
+- Not published to npm.
+- GitHub release workflow creates an annotated `vX.Y.Z` tag whose root is the installable package snapshot.
+- Only bump `packages/zag-ripple/package.json` when a new tag should exist.
+
+Site deploy:
+
+- Cloudflare Pages workflow: `.github/workflows/deploy-site.yml`.
+- Required GitHub secret: `CLOUDFLARE_API_TOKEN`.
+- Non-secret envs in workflow: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_PROJECT_NAME`.
+- `site/public/_redirects` should handle SPA deep links without rewriting asset URLs.
+
+After deploy:
+
+```bash
+gh run list --workflow="Deploy Site" --limit 1
+curl -fsSI https://zag-ripple.pages.dev/
+curl -fsSI https://zag-ripple.pages.dev/components/tree-view
+```
+
+## Commit Hygiene
+
+Respect dirty worktrees. Do not revert user changes. Stage only files relevant to the current upgrade phase.
+
+Recommended commit groups:
+
+- `Upgrade Zag Ripple stack`
+- `Fix Zag demo runtime errors`
+- `Add Cloudflare Pages site deployment`
+- `Fix release workflow test order`
+
+Do not include `.env` or generated local build directories.

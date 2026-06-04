@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sync Latest"
+  short_description: "Upgrade zag-ripple against latest Ripple/TSRX and Zag JS."
+  default_prompt: "Use this skill to sync the zag-ripple repo to the latest Ripple/TSRX and Zag JS versions, add new Zag demos, fix upgrade fallout, validate the site, and prepare commits."
