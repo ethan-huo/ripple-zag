@@ -36,6 +36,10 @@ export function HeroSection() {
 					{'Browse Components'}
 					<ArrowRight class="ml-2 h-5 w-5" />
 				</Button>
+				<Button size="lg" href="/streamdown" variant="outline">
+					{'Streamdown Playground'}
+					<ArrowRight class="ml-2 h-5 w-5" />
+				</Button>
 				// Installation Command
 
 				<div

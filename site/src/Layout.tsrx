@@ -3,6 +3,7 @@ import { Page } from './Page.tsrx';
 import { Components } from './Components.tsrx';
 import { Component } from './Component.tsrx';
 import { NotFound } from './NotFound.tsrx';
+import { StreamdownPlayground } from "./extensions/streamdown-playground.tsrx";
 import * as routing from "routing-machine"
 import { useMachine, normalizeProps } from "zag-ripple"
 import { track } from "ripple"
@@ -16,6 +17,7 @@ export function Layout() {
 			{ path: "/", name: "home" },
 			{ path: "/components", name: "components" },
 			{ path: "/components/:id", name: "component" },
+			{ path: "/streamdown", name: "streamdown" },
 			{ path: "*", name: "not-found" },
 		],
 	})
@@ -37,6 +39,10 @@ export function Layout() {
 
 		if(router.value.currentRouteName === "component") {
 			<Component />
+		}
+
+		if(router.value.currentRouteName === "streamdown") {
+			<StreamdownPlayground />
 		}
 
 		if(router.value.currentRouteName === "not-found") {

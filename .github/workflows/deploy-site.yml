@@ -10,6 +10,7 @@ on:
       - bun.lock
       - package.json
       - packages/zag-ripple/**
+      - packages/ripple-streamdown/**
       - site/**
 
 permissions:
@@ -43,6 +44,9 @@ jobs:
 
       - name: Test package
         run: bun --filter zag-ripple test -- --run
+
+      - name: Test Streamdown extension
+        run: bun --filter ripple-streamdown test
 
       - name: Build site
         run: bun --filter ./site build

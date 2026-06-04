@@ -1,8 +1,10 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './components.css';
+@import './streamdown-playground.css';
 
 @import './theme.css';
+@import 'ripple-streamdown/styles.css';
 
 .grid-pattern {
 	background-image: linear-gradient(var(--border) 1px, transparent 1px);
