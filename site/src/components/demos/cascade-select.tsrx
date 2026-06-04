@@ -72,7 +72,7 @@ function TreeNode(props) {
 			let itemState = track(() => cascadeApi.value.getItemState(itemProps.value));
 
 			<li {...cascadeApi.value.getItemProps(itemProps.value)}>
-				<span {...cascadeApi.value.getItemTextProps(itemProps.value)}>{item.value.label}</span>
+				<span {...cascadeApi.value.getItemTextProps(itemProps.value)}>{item.label}</span>
 				if (itemState.value.hasChildren) {
 					<span data-scope="cascade-select" data-part="branch-indicator">
 						<ChevronRight size={14} />
