@@ -10,7 +10,8 @@
   "scripts": {
     "test": "bun --filter zag-ripple test -- --run",
     "site": "bun --filter ./site dev",
-    "build": "bun run --filter './packages/*' build"
+    "build": "bun run --filter './packages/*' build",
+    "check:tsrx": "bun tools/check-tsrx-directives.mjs"
   },
   "keywords": [],
   "author": "anubra266",

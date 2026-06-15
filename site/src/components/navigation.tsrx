@@ -1,16 +1,16 @@
 import { Button } from "./ui/button.tsrx";
-import { Github } from "../lib/lucide-icons.tsrx";
+import { SiGithub } from '../lib/lucide-icons.tsrx';
 import { ThemeToggle } from "./theme-toggle.tsrx";
 import { SearchDocs } from "./search-docs.tsrx";
 import { RouteContext } from "../lib/route-context";
 import { track } from "ripple";
 import { cn } from "../lib/utils";
 
-export function Navigation({ noSearch }: { noSearch?: boolean }) {
+export function Navigation({ noSearch }: { noSearch?: boolean }) @{
 	const showSearch = track(() => !noSearch)
 	const router = RouteContext.get()
-	
-	return <>
+
+	<>
 	<nav class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
 	<div class="mx-auto max-w-[89rem] px-6">
         <div class="flex h-12 items-center justify-between">
@@ -36,7 +36,7 @@ export function Navigation({ noSearch }: { noSearch?: boolean }) {
             <ThemeToggle />
             <Button variant="ghost" size="sm">
 			<a href="https://github.com/ethan-huo/zag-ripple" target="_blank">
-                <Github class="h-4 w-4" />
+                <SiGithub class="h-4 w-4" />
 			</a>
             </Button>
 		</div>

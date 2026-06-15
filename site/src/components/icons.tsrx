@@ -1,5 +1,5 @@
-export function accordion(props) {
-	return <>
+export function accordion(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="3"
@@ -30,8 +30,8 @@ export function accordion(props) {
 	</>
 }
 
-export function slider(props) {
-	return <>
+export function slider(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle
 			cx="12"
@@ -55,8 +55,8 @@ export function slider(props) {
 	</>
 }
 
-export function user(props) {
-	return <>
+export function user(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle cx="12" cy="8" r="4" fill="currentColor" opacity="0.6" />
 		<path
@@ -69,8 +69,8 @@ export function user(props) {
 	</>
 }
 
-export function carousel(props) {
-	return <>
+export function carousel(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="2"
@@ -95,8 +95,8 @@ export function carousel(props) {
 	</>
 }
 
-export function checkbox(props) {
-	return <>
+export function checkbox(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="4"
@@ -118,8 +118,8 @@ export function checkbox(props) {
 	</>
 }
 
-export function clipboard(props) {
-	return <>
+export function clipboard(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="8"
@@ -141,8 +141,8 @@ export function clipboard(props) {
 	</>
 }
 
-export function collapsible(props) {
-	return <>
+export function collapsible(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect x="3" y="6" width="18" height="4" rx="1" fill="currentColor" />
 		<path d="M7 14h10" stroke="currentColor" strokeWidth="2" />
@@ -157,8 +157,8 @@ export function collapsible(props) {
 	</>
 }
 
-export function color(props) {
-	return <>
+export function color(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle
 			cx="12"
@@ -175,8 +175,8 @@ export function color(props) {
 	</>
 }
 
-export function combobox(props) {
-	return <>
+export function combobox(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="3"
@@ -199,8 +199,8 @@ export function combobox(props) {
 	</>
 }
 
-export function calendar(props) {
-	return <>
+export function calendar(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="3"
@@ -240,8 +240,8 @@ export function calendar(props) {
 	</>
 }
 
-export function dialog(props) {
-	return <>
+export function dialog(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="1"
@@ -284,8 +284,8 @@ export function dialog(props) {
 	</>
 }
 
-export function edit(props) {
-	return <>
+export function edit(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<path
 			d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
@@ -298,8 +298,8 @@ export function edit(props) {
 	</>
 }
 
-export function upload(props) {
-	return <>
+export function upload(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<path
 			d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
@@ -325,8 +325,8 @@ export function upload(props) {
 	</>
 }
 
-export function panel(props) {
-	return <>
+export function panel(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="3"
@@ -343,8 +343,8 @@ export function panel(props) {
 	</>
 }
 
-export function card(props) {
-	return <>
+export function card(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="1"
@@ -368,8 +368,8 @@ export function card(props) {
 	</>
 }
 
-export function list(props) {
-	return <>
+export function list(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<line
 			x1="8"
@@ -423,8 +423,8 @@ export function list(props) {
 	</>
 }
 
-export function menu(props) {
-	return <>
+export function menu(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<line
 			x1="4"
@@ -454,8 +454,8 @@ export function menu(props) {
 	</>
 }
 
-export function context(props) {
-	return <>
+export function context(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle cx="12" cy="12" r="1" fill="currentColor" />
 		<circle cx="12" cy="5" r="1" fill="currentColor" />
@@ -464,8 +464,8 @@ export function context(props) {
 	</>
 }
 
-export function nested(props) {
-	return <>
+export function nested(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<line
 			x1="4"
@@ -503,8 +503,8 @@ export function nested(props) {
 	</>
 }
 
-export function number(props) {
-	return <>
+export function number(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="4"
@@ -521,8 +521,8 @@ export function number(props) {
 	</>
 }
 
-export function pagination(props) {
-	return <>
+export function pagination(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle cx="5" cy="12" r="2" fill="currentColor" />
 		<circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.6" />
@@ -531,8 +531,8 @@ export function pagination(props) {
 	</>
 }
 
-export function password(props) {
-	return <>
+export function password(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="3"
@@ -555,8 +555,8 @@ export function password(props) {
 	</>
 }
 
-export function pin(props) {
-	return <>
+export function pin(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="5"
@@ -602,8 +602,8 @@ export function pin(props) {
 	</>
 }
 
-export function popover(props) {
-	return <>
+export function popover(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<path
 			d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-5 4v-4H5a2 2 0 0 1-2-2V6z"
@@ -615,8 +615,8 @@ export function popover(props) {
 	</>
 }
 
-export function presence(props) {
-	return <>
+export function presence(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle
 			cx="12"
@@ -631,8 +631,8 @@ export function presence(props) {
 	</>
 }
 
-export function progress(props) {
-	return <>
+export function progress(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="2"
@@ -648,8 +648,8 @@ export function progress(props) {
 	</>
 }
 
-export function circle(props) {
-	return <>
+export function circle(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle
 			cx="12"
@@ -668,8 +668,8 @@ export function circle(props) {
 	</>
 }
 
-export function qr(props) {
-	return <>
+export function qr(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="3"
@@ -715,8 +715,8 @@ export function qr(props) {
 	</>
 }
 
-export function radio(props) {
-	return <>
+export function radio(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle
 			cx="12"
@@ -731,8 +731,8 @@ export function radio(props) {
 	</>
 }
 
-export function range(props) {
-	return <>
+export function range(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<line
 			x1="4"
@@ -748,8 +748,8 @@ export function range(props) {
 	</>
 }
 
-export function star(props) {
-	return <>
+export function star(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<polygon
 			points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
@@ -759,8 +759,8 @@ export function star(props) {
 	</>
 }
 
-export function scroll(props) {
-	return <>
+export function scroll(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="3"
@@ -777,8 +777,8 @@ export function scroll(props) {
 	</>
 }
 
-export function segment(props) {
-	return <>
+export function segment(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect x="3" y="8" width="6" height="8" rx="2" fill="currentColor" />
 		<rect
@@ -805,8 +805,8 @@ export function segment(props) {
 	</>
 }
 
-export function select(props) {
-	return <>
+export function select(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="4"
@@ -828,8 +828,8 @@ export function select(props) {
 	</>
 }
 
-export function signature(props) {
-	return <>
+export function signature(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<path
 			d="M3 17c3-1 7-3 11-3s8 2 11 3"
@@ -855,8 +855,8 @@ export function signature(props) {
 	</>
 }
 
-export function split(props) {
-	return <>
+export function split(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="3"
@@ -880,8 +880,8 @@ export function split(props) {
 	</>
 }
 
-export function steps(props) {
-	return <>
+export function steps(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle cx="6" cy="12" r="3" fill="currentColor" />
 		<circle
@@ -920,8 +920,8 @@ export function steps(props) {
 	</>
 }
 
-export function switcher(props) {
-	return <>
+export function switcher(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="1"
@@ -938,8 +938,8 @@ export function switcher(props) {
 	</>
 }
 
-export function tabs(props) {
-	return <>
+export function tabs(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect x="3" y="7" width="5" height="3" rx="1" fill="currentColor" />
 		<rect
@@ -976,8 +976,8 @@ export function tabs(props) {
 	</>
 }
 
-export function tags(props) {
-	return <>
+export function tags(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<path
 			d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"
@@ -997,8 +997,8 @@ export function tags(props) {
 	</>
 }
 
-export function timer(props) {
-	return <>
+export function timer(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle
 			cx="12"
@@ -1020,8 +1020,8 @@ export function timer(props) {
 	</>
 }
 
-export function toast(props) {
-	return <>
+export function toast(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="2"
@@ -1054,8 +1054,8 @@ export function toast(props) {
 	</>
 }
 
-export function toggle(props) {
-	return <>
+export function toggle(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect x="3" y="8" width="5" height="8" rx="2" fill="currentColor" />
 		<rect
@@ -1082,8 +1082,8 @@ export function toggle(props) {
 	</>
 }
 
-export function tooltip(props) {
-	return <>
+export function tooltip(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="2"
@@ -1100,8 +1100,8 @@ export function tooltip(props) {
 	</>
 }
 
-export function tour(props) {
-	return <>
+export function tour(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle
 			cx="12"
@@ -1121,8 +1121,8 @@ export function tour(props) {
 	</>
 }
 
-export function tree(props) {
-	return <>
+export function tree(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<circle
 			cx="6"
@@ -1148,8 +1148,8 @@ export function tree(props) {
 }
 
 // Default fallback icon
-export function defaultIcon(props) {
-	return <>
+export function defaultIcon(props) @{
+	<>
 	<svg viewBox="0 0 24 24" {...props}>
 		<rect
 			x="4"

@@ -4,14 +4,15 @@ import { getDataAttrDoc } from "@zag-js/docs"
 import { Kbd } from './ui/kbd.tsrx';
 import { track } from 'ripple';
 
-export function DataAttributes({id}:any) {
-    return <>
+export function DataAttributes({id}:any) @{
+    const data = track(() => getDataAttrDoc(id))
+
+    <>
     <Card class="p-5">
         <h3 class="text-base font-semibold mb-4">{'Data Attributes'}</h3>
         <div class="space-y-6">
-       try {
-         const data = track(() => getDataAttrDoc(id))
-         for(const [part, attributes] of Object.entries(data.value)) {
+       @try {
+         @for(const [part, attributes] of Object.entries(data.value)) {
             <div>
                 <h4 class="font-semibold mb-3 text-sm">{part}</h4>
                 <div class="overflow-x-auto">
@@ -27,7 +28,7 @@ export function DataAttributes({id}:any) {
                             </tr>
                           </thead>
                           <tbody>
-                            for(const [key, value] of Object.entries(attributes).filter(([_key, value]) => value !== "")) {
+                            @for(const [key, value] of Object.entries(attributes).filter(([_key, value]) => value !== "")) {
                                 <tr class="not-last:border-b border-border">
                                     <td class="py-2 font-mono w-48"><Kbd>{key}</Kbd></td>
                                     <td class="py-2">{value}</td>
@@ -35,11 +36,11 @@ export function DataAttributes({id}:any) {
                             }
                           </tbody>
                     </table>
-                </div>    
+                </div>
             </div>
          }
-       } catch (error) {
-        
+       } @catch (error) {
+
        }
         </div>
     </Card>

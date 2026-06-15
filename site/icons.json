@@ -1,0 +1,51 @@
+{
+	"lucide": {
+		"icons": [
+			"arrow-down-left",
+			"arrow-left",
+			"arrow-right",
+			"bold",
+			"calendar-days",
+			"check",
+			"chevron-down",
+			"chevron-left",
+			"chevron-right",
+			"chevron-up",
+			"chevrons-up-down",
+			"circle-alert",
+			"clipboard-copy",
+			"code",
+			"code-xml",
+			"copy",
+			"external-link",
+			"eye",
+			"eye-off",
+			"file",
+			"file-text",
+			"folder",
+			"info",
+			"italic",
+			"keyboard",
+			"loader",
+			"maximize-2",
+			"minus",
+			"moon",
+			"pipette",
+			"play",
+			"rotate-ccw",
+			"search",
+			"settings",
+			"sparkles",
+			"sun",
+			"triangle-alert",
+			"underline",
+			"x",
+			"zap"
+		]
+	},
+	"simple-icons": {
+		"icons": [
+			"github"
+		]
+	}
+}

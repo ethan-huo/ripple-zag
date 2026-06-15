@@ -2,7 +2,7 @@ import * as slider from '@zag-js/slider';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
-export function Slider() {
+export function Slider() @{
 	let service = useMachine(slider.machine, {
 		id: 'slider',
 		min: -50,
@@ -11,7 +11,7 @@ export function Slider() {
 	});
 	let api = track(() => slider.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<div>
 			<label {...api.value.getLabelProps()}>{"Quantity"}</label>

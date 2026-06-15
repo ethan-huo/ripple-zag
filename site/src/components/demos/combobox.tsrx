@@ -2,9 +2,9 @@ import * as combobox from '@zag-js/combobox';
 import { createFilter } from '@zag-js/i18n-utils';
 import { normalizeProps, useMachine, mergeProps } from 'zag-ripple';
 import { track, Portal } from 'ripple';
-import { ChevronsUpDown } from '../../lib/lucide-icons.tsrx';
+import { LuChevronsUpDown } from '../../lib/lucide-icons.tsrx';
 
-export function Combobox() {
+export function Combobox() @{
 	let options = track(comboboxData);
 	let currentInputValue = '';
 
@@ -37,26 +37,27 @@ export function Combobox() {
 	});
 	let api = track(() => combobox.connect(service, normalizeProps));
 
-	return <>
+	const triggerProps = mergeProps(api.value.getTriggerProps(), {
+		onClick() {
+			options.value = comboboxData;
+		},
+	});
+
+	<>
 	<div {...api.value.getRootProps()}>
 		<label {...api.value.getLabelProps()}>{'Nationality'}</label>
 		<div {...api.value.getControlProps()}>
 			<input {...api.value.getInputProps()} />
-			const triggerProps = mergeProps(api.value.getTriggerProps(), {
-				onClick() {
-					options.value = comboboxData;
-				},
-			});
 			<button {...triggerProps}>
-				<ChevronsUpDown />
+				<LuChevronsUpDown />
 			</button>
 		</div>
 	</div>
 	<Portal target={document.body}>
 		<div {...api.value.getPositionerProps()}>
-			if (options.value.length > 0) {
+			@if (options.value.length > 0) {
 				<ul {...api.value.getContentProps()}>
-					for (let item of options.value) {
+					@for (let item of options.value) {
 						<li {...api.value.getItemProps({ item })}>{item.label}</li>
 					}
 				</ul>

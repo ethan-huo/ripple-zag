@@ -1,9 +1,9 @@
 import * as select from '@zag-js/select';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
-import { ChevronDown, Check } from '../../lib/lucide-icons.tsrx';
+import { LuChevronDown, LuCheck } from '../../lib/lucide-icons.tsrx';
 
-export function Select() {
+export function Select() @{
 	const collection = select.collection(
 		{
 			items: data,
@@ -19,23 +19,23 @@ export function Select() {
 	});
 	let api = track(() => select.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<label {...api.value.getLabelProps()}>{'Label'}</label>
 		<div {...api.value.getControlProps()}>
 			<button {...api.value.getTriggerProps()}>
 				<span>{api.value.valueAsString || 'Select option'}</span>
-				<ChevronDown />
+				<LuChevronDown />
 			</button>
 		</div>
 		<Portal target={document.body}>
 			<div {...api.value.getPositionerProps()}>
 				<ul {...api.value.getContentProps()}>
-					for (const item of collection.items) {
+					@for (const item of collection.items) {
 						<li {...api.value.getItemProps({ item })}>
 							<span {...api.value.getItemTextProps({ item })}>{item.label}</span>
 							<span {...api.value.getItemIndicatorProps({ item })}>
-								<Check />
+								<LuCheck />
 							</span>
 						</li>
 					}

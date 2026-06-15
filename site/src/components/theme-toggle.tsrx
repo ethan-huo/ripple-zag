@@ -1,8 +1,8 @@
 import { Button } from "./ui/button.tsrx";
 import { effect, track } from "ripple";
-import { Moon, Sun } from "../lib/lucide-icons.tsrx";
+import { LuMoon, LuSun } from '../lib/lucide-icons.tsrx';
 
-export function ThemeToggle() {
+export function ThemeToggle() @{
     let theme = track("dark")
 
     effect(() => {
@@ -44,12 +44,12 @@ export function ThemeToggle() {
         applyTheme(newTheme)
     }
 
-    return <>
+    <>
     <Button variant="ghost" size="sm" class="w-8 h-8 p-0" onClick={toggleTheme} >
-        if (theme.value === "light") {
-            <Sun class="w-4 h-4 transition-transform hover:scale-110" />
-        } else {
-            <Moon class="w-4 h-4 transition-transform hover:scale-110" />
+        @if (theme.value === "light") {
+            <LuSun class="w-4 h-4 transition-transform hover:scale-110" />
+        } @else {
+            <LuMoon class="w-4 h-4 transition-transform hover:scale-110" />
         }
         <span class="sr-only">
             {"Switch to "}{theme.value === "light" ? "dark" : "light"}{" theme"}

@@ -1,16 +1,16 @@
 import * as popover from '@zag-js/popover';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
-import { X } from '../../lib/lucide-icons.tsrx';
+import { LuX } from '../../lib/lucide-icons.tsrx';
 
-export function Popover() {
+export function Popover() @{
 	let service = useMachine(popover.machine, {
 		id: 'popover',
 		portalled: true,
 	});
 	let api = track(() => popover.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<button {...api.value.getTriggerProps()}>{'Click me'}</button>
 	<Portal target={document.body}>
 		<div {...api.value.getPositionerProps()}>
@@ -29,7 +29,7 @@ export function Popover() {
 					<button>{'Update Profile'}</button>
 				</div>
 				<button {...api.value.getCloseTriggerProps()}>
-					<X />
+					<LuX />
 				</button>
 			</div>
 		</div>

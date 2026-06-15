@@ -1,11 +1,11 @@
 import { Button } from './ui/button.tsrx';
-import { ArrowRight, Sparkles, Zap, CodeXml, Check } from '../lib/lucide-icons.tsrx';
+import { LuArrowRight, LuSparkles, LuZap, LuCodeXml, LuCheck } from '../lib/lucide-icons.tsrx';
 import { useCopy } from '../lib/use-copy.tsrx';
 
-export function HeroSection() {
+export function HeroSection() @{
 	let [copy, copied] = useCopy();
 
-	return <>
+	<>
 	// Announcement Badge
 	<section class="relative flex min-h-[calc(100vh-3rem)] items-center">
 		// Main Heading
@@ -13,7 +13,7 @@ export function HeroSection() {
 			<div
 				class="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-sm text-muted-foreground"
 			>
-				<Sparkles class="h-4 w-4" />
+				<LuSparkles class="h-4 w-4" />
 				<span>{'Built with Zag.js • Headless • Accessible'}</span>
 			</div>
 
@@ -34,11 +34,11 @@ export function HeroSection() {
 			<div class="mb-12 flex flex-col gap-3 sm:flex-row sm:items-center">
 				<Button size="lg" href="/components">
 					{'Browse Components'}
-					<ArrowRight class="ml-2 h-5 w-5" />
+					<LuArrowRight class="ml-2 h-5 w-5" />
 				</Button>
 				<Button size="lg" href="/streamdown" variant="outline">
 					{'Streamdown Playground'}
-					<ArrowRight class="ml-2 h-5 w-5" />
+					<LuArrowRight class="ml-2 h-5 w-5" />
 				</Button>
 				// Installation Command
 
@@ -54,10 +54,10 @@ export function HeroSection() {
 						class="h-6 w-6 p-0"
 						onClick={() => copy('npm install zag-ripple')}
 					>
-						if (copied.value) {
-							<Check class="h-3 w-3" />
-						} else {
-							<CodeXml class="h-3 w-3" />
+						@if (copied.value) {
+							<LuCheck class="h-3 w-3" />
+						} @else {
+							<LuCodeXml class="h-3 w-3" />
 						}
 					</Button>
 				</div>
@@ -66,15 +66,15 @@ export function HeroSection() {
 			// Feature Icons
 			<div class="flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-border pt-6 text-muted-foreground">
 				<div class="flex items-center gap-2">
-					<Zap class="h-5 w-5 text-primary" />
+					<LuZap class="h-5 w-5 text-primary" />
 					<span class="text-sm">{'Lightning Fast'}</span>
 				</div>
 				<div class="flex items-center gap-2">
-					<Sparkles class="h-5 w-5 text-primary" />
+					<LuSparkles class="h-5 w-5 text-primary" />
 					<span class="text-sm">{'Fully Accessible'}</span>
 				</div>
 				<div class="flex items-center gap-2">
-					<CodeXml class="h-5 w-5 text-primary" />
+					<LuCodeXml class="h-5 w-5 text-primary" />
 					<span class="text-sm">{'Developer First'}</span>
 				</div>
 			</div>

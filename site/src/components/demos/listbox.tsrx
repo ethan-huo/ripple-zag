@@ -2,7 +2,7 @@ import * as listbox from '@zag-js/listbox';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
-export function Listbox() {
+export function Listbox() @{
 	const collection = listbox.collection({
 		items: people,
 		itemToValue: (item) => item.id.toString(),
@@ -19,13 +19,13 @@ export function Listbox() {
 
     const groups = collection.group();
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<ul {...api.value.getContentProps()}>
-            for (const [group, items] of groups) {
+            @for (const [group, items] of groups) {
 			<div {...api.value.getItemGroupProps({ id: group })}>
 				<p {...api.value.getItemGroupLabelProps({ htmlFor: group })}>{group}</p>
-				for (const item of items) {
+				@for (const item of items) {
 					<div {...api.value.getItemProps({ item })}>
 						<img src={item.image_url} alt={item.name} />
 						{item.name}

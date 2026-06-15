@@ -1,17 +1,17 @@
 import * as floatingPanel from '@zag-js/floating-panel';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
-import { X, Minus, Maximize2, ArrowDownLeft } from '../../lib/lucide-icons.tsrx';
+import { LuX, LuMinus, LuMaximize2, LuArrowDownLeft } from '../../lib/lucide-icons.tsrx';
 
-export function FloatingPanel() {
+export function FloatingPanel() @{
 	let service = useMachine(floatingPanel.machine, {
 		id: 'floating-panel',
 	});
 	let api = track(() => floatingPanel.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<button {...api.value.getTriggerProps()}>{'Open Panel'}</button>
-	if (api.value.open) {
+	@if (api.value.open) {
 		<Portal target={document.body}>
 			<div {...api.value.getPositionerProps()}>
 				<div {...api.value.getContentProps()}>
@@ -20,16 +20,16 @@ export function FloatingPanel() {
 							<p {...api.value.getTitleProps()}>{'Settings'}</p>
 							<div {...api.value.getControlProps()}>
 								<button {...api.value.getStageTriggerProps({ stage: 'minimized' })}>
-									<Minus />
+									<LuMinus />
 								</button>
 								<button {...api.value.getStageTriggerProps({ stage: 'maximized' })}>
-									<Maximize2 />
+									<LuMaximize2 />
 								</button>
 								<button {...api.value.getStageTriggerProps({ stage: 'default' })}>
-									<ArrowDownLeft />
+									<LuArrowDownLeft />
 								</button>
 								<button {...api.value.getCloseTriggerProps()}>
-									<X />
+									<LuX />
 								</button>
 							</div>
 						</div>

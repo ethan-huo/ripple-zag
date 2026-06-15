@@ -2,7 +2,7 @@ import * as splitter from '@zag-js/splitter';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
-export function Splitter() {
+export function Splitter() @{
 	let service = useMachine(splitter.machine, {
 		id: 'splitter',
 		panels: [{ id: "a" }, { id: "b" }],
@@ -10,7 +10,7 @@ export function Splitter() {
 	});
 	let api = track(() => splitter.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<div {...api.value.getPanelProps({ id: "a" })}>
 			<p>{"A"}</p>

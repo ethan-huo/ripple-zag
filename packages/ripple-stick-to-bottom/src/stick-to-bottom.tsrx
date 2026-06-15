@@ -48,7 +48,7 @@ export function createStickToBottom(options?: StickToBottomOptions) {
   return createStickToBottomController(options)
 }
 
-export function StickToBottom(props: StickToBottomProps) {
+export function StickToBottom(props: StickToBottomProps) @{
   const controller = createStickToBottomController(getOptions(props))
 
   props.contextRef?.(controller)
@@ -77,7 +77,7 @@ export function StickToBottom(props: StickToBottomProps) {
   }
   const bottomInset = getInsetValue(props.bottomInset)
 
-  return <>
+  <>
     <div
       class={["ripple-stick-to-bottom", props.class, props.className, props.scrollClass, props.scrollClassName]}
       ref={setScrollElement}
@@ -85,7 +85,7 @@ export function StickToBottom(props: StickToBottomProps) {
     >
       <div class={["ripple-stick-to-bottom-content", props.contentClass, props.contentClassName]} ref={setContentElement}>
         {props.children}
-        if (bottomInset) {
+        @if (bottomInset) {
           <div
             class="ripple-stick-to-bottom-spacer"
             style={{ "--ripple-stick-to-bottom-inset": bottomInset }}

@@ -2,13 +2,13 @@ import * as hoverCard from '@zag-js/hover-card';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
 
-export function HoverCard() {
+export function HoverCard() @{
 	let service = useMachine(hoverCard.machine, {
 		id: 'hover-card',
 	});
 	let api = track(() => hoverCard.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<a
 		href="https://x.com/ripple__js"
 		target="_blank"
@@ -18,7 +18,7 @@ export function HoverCard() {
 		<img alt="Ripple JS" src="https://www.tsrxjs.com/favicon.svg" />
 	</a>
 
-	if (api.value.open) {
+	@if (api.value.open) {
 		<Portal target={document.body}>
 			<div {...api.value.getPositionerProps()}>
 				<div {...api.value.getContentProps()}>

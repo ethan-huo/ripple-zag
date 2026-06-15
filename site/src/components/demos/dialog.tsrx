@@ -1,15 +1,15 @@
 import * as dialog from '@zag-js/dialog';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
-import { X } from '../../lib/lucide-icons.tsrx';
+import { LuX } from '../../lib/lucide-icons.tsrx';
 
-export function Dialog() {
+export function Dialog() @{
 	let service = useMachine(dialog.machine, {
 		id: 'dialog',
 	});
 	let api = track(() => dialog.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<button {...api.value.getTriggerProps()}>{'Open Dialog'}</button>
 	<Portal target={document.body}>
 		<div {...api.value.getBackdropProps()} />
@@ -25,7 +25,7 @@ export function Dialog() {
 					<button>{'Save'}</button>
 				</div>
 				<button {...api.value.getCloseTriggerProps()}>
-					<X />
+					<LuX />
 				</button>
 			</div>
 		</div>

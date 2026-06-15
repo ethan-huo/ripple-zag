@@ -28,9 +28,9 @@ export function Badge({
     variant,
     children,
     ...props
-}) {
+}) @{
 
-        return <>
+        <>
         <span
             class={cn(badgeVariants({ variant }), className)}
             {...props}

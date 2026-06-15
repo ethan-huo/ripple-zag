@@ -2,13 +2,13 @@ import * as toggle from '@zag-js/switch';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
-export function Switch() {
+export function Switch() @{
 	let service = useMachine(toggle.machine, {
 		id: 'switch',
 	});
 	let api = track(() => toggle.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<label {...api.value.getRootProps()}>
 		<input {...api.value.getHiddenInputProps()} />
 		<span {...api.value.getControlProps()}>

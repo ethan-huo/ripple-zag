@@ -8,7 +8,7 @@ import { createShikiRenderer } from "ripple-streamdown/shiki"
 import { normalizeProps, useMachine } from "zag-ripple"
 import { Button } from "../components/ui/button.tsrx"
 import { Navigation } from "../components/navigation.tsrx"
-import { Check, ChevronDown, Play, Settings } from "../lib/lucide-icons.tsrx"
+import { LuCheck, LuChevronDown, LuPlay, LuSettings } from '../lib/lucide-icons.tsrx';
 import { streamdownSample } from "./streamdown-sample"
 
 type PlaygroundMode = "static" | "streaming"
@@ -66,7 +66,7 @@ function PlaygroundSelect<T extends string>(props: {
   onValueChange: (value: T) => void
   label?: string
   ariaLabel?: string
-}) {
+}) @{
   const collection = select.collection({
     items: props.options,
     itemToString: (item) => item.label,
@@ -88,37 +88,35 @@ function PlaygroundSelect<T extends string>(props: {
   })
   const api = track(() => select.connect(service, normalizeProps))
 
-  return (
-    <div class="streamdown-select" {...api.value.getRootProps()}>
-      if (props.label) {
-        <label class="streamdown-settings-label" {...api.value.getLabelProps()}>
-          {props.label}
-        </label>
-      }
-      <button
-        class="streamdown-select-trigger"
-        aria-label={props.ariaLabel}
-        {...api.value.getTriggerProps()}
-      >
-        <span>{api.value.valueAsString || props.options[0]?.label}</span>
-        <ChevronDown class="h-4 w-4" />
-      </button>
-      <Portal target={document.body}>
-        <div class="streamdown-select-positioner" {...api.value.getPositionerProps()}>
-          <ul class="streamdown-select-content" {...api.value.getContentProps()}>
-            for (const item of collection.items) {
-              <li class="streamdown-select-item" {...api.value.getItemProps({ item })}>
-                <span {...api.value.getItemTextProps({ item })}>{item.label}</span>
-                <span class="streamdown-select-check" {...api.value.getItemIndicatorProps({ item })}>
-                  <Check class="h-4 w-4" />
-                </span>
-              </li>
-            }
-          </ul>
-        </div>
-      </Portal>
-    </div>
-  )
+  <div class="streamdown-select" {...api.value.getRootProps()}>
+    @if (props.label) {
+      <label class="streamdown-settings-label" {...api.value.getLabelProps()}>
+        {props.label}
+      </label>
+    }
+    <button
+      class="streamdown-select-trigger"
+      aria-label={props.ariaLabel}
+      {...api.value.getTriggerProps()}
+    >
+      <span>{api.value.valueAsString || props.options[0]?.label}</span>
+      <LuChevronDown class="h-4 w-4" />
+    </button>
+    <Portal target={document.body}>
+      <div class="streamdown-select-positioner" {...api.value.getPositionerProps()}>
+        <ul class="streamdown-select-content" {...api.value.getContentProps()}>
+          @for (const item of collection.items) {
+            <li class="streamdown-select-item" {...api.value.getItemProps({ item })}>
+              <span {...api.value.getItemTextProps({ item })}>{item.label}</span>
+              <span class="streamdown-select-check" {...api.value.getItemIndicatorProps({ item })}>
+                <LuCheck class="h-4 w-4" />
+              </span>
+            </li>
+          }
+        </ul>
+      </div>
+    </Portal>
+  </div>
 }
 
 function StreamdownSettings(props: {
@@ -136,7 +134,7 @@ function StreamdownSettings(props: {
   onAnimationSplitByChange: (value: AnimationSplitBy) => void
   onCaretChange: (value: CaretMode) => void
   onSpeedChange: (value: number) => void
-}) {
+}) @{
   const service = useMachine(popover.machine, {
     id: "streamdown-settings",
     portalled: true,
@@ -147,10 +145,9 @@ function StreamdownSettings(props: {
   })
   const api = track(() => popover.connect(service, normalizeProps))
 
-  return (
-    <>
-      <button class="streamdown-settings-trigger" {...api.value.getTriggerProps()} aria-label="Streamdown settings">
-        <Settings class="h-4 w-4" />
+  <>
+    <button class="streamdown-settings-trigger" {...api.value.getTriggerProps()} aria-label="Streamdown settings">
+        <LuSettings class="h-4 w-4" />
       </button>
       <Portal target={document.body}>
         <div class="streamdown-settings-positioner" {...api.value.getPositionerProps()}>
@@ -167,7 +164,8 @@ function StreamdownSettings(props: {
                   onValueChange={props.onAnimatedChange}
                 />
               </div>
-              if (props.animated === "on") {
+              @if (props.animated === "on") {
+                <>
                 <div class="streamdown-settings-row">
                   <PlaygroundSelect
                     id="streamdown-effect-select"
@@ -210,6 +208,7 @@ function StreamdownSettings(props: {
                     onValueChange={props.onAnimationSplitByChange}
                   />
                 </div>
+                </>
               }
               <div class="streamdown-settings-row">
                 <PlaygroundSelect
@@ -242,10 +241,9 @@ function StreamdownSettings(props: {
         </div>
       </Portal>
     </>
-  )
 }
 
-export function StreamdownPlayground() {
+export function StreamdownPlayground() @{
   const markdown = track(streamdownSample)
   const markdownOutput = track("")
   const mode = track<PlaygroundMode>("static")
@@ -295,11 +293,10 @@ export function StreamdownPlayground() {
     }, streamSpeed.value)
   }
 
-  return (
-    <>
-      <head>
-        <title>{"Streamdown Playground | ZagRipple"}</title>
-      </head>
+  <>
+    <head>
+      <title>{"Streamdown Playground | ZagRipple"}</title>
+    </head>
 
       <Navigation noSearch />
 
@@ -361,7 +358,7 @@ export function StreamdownPlayground() {
               class="streamdown-action-button"
               variant={isStreaming.value ? "destructive" : "default"}
             >
-              <Play class="h-3.5 w-3.5" />
+              <LuPlay class="h-3.5 w-3.5" />
               {isStreaming.value ? "Stop" : "Simulate Stream"}
             </Button>
 
@@ -420,7 +417,7 @@ export function StreamdownPlayground() {
                 caret={caret.value === "none" ? undefined : caret.value}
               />
             </StickToBottom>
-            if (mode.value === "streaming" && !isOutputAtBottom.value) {
+            @if (mode.value === "streaming" && !isOutputAtBottom.value) {
               <button
                 class="streamdown-scroll-to-bottom"
                 type="button"
@@ -429,12 +426,11 @@ export function StreamdownPlayground() {
                   outputScrollController?.scrollToBottom()
                 }}
               >
-                <ChevronDown class="h-5 w-5" />
+                <LuChevronDown class="h-5 w-5" />
               </button>
             }
           </div>
         </section>
       </main>
     </>
-  )
 }

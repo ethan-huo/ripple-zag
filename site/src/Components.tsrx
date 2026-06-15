@@ -1,14 +1,14 @@
 import { Navigation } from './components/navigation.tsrx';
 import { Card } from './components/ui/card.tsrx';
 import { Badge } from './components/ui/badge.tsrx';
-import { Search } from "./lib/lucide-icons.tsrx";
+import { LuSearch } from './lib/lucide-icons.tsrx';
 import { components } from './lib/components';
 import * as icons from "./components/icons.tsrx";
 import { useSearch } from "./lib/use-search.tsrx";
 import { track } from "ripple";
 import { RouteContext } from "./lib/route-context";
 
-export function Components() {
+export function Components() @{
     const router = RouteContext.get()
     let searchTerm = track("")
     const results = useSearch(searchTerm, components,
@@ -18,7 +18,7 @@ export function Components() {
         ]
     )
 
-  return <>
+  <>
   <head>
     <title>{"Components | ZagRipple"}</title>
   </head>
@@ -38,7 +38,7 @@ export function Components() {
 
       // Search
       <div class="relative max-w-md">
-        <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <LuSearch class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
           type="text"
           value={searchTerm.value}
@@ -51,7 +51,8 @@ export function Components() {
 
     // Components Grid
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        for (const comp of results.value) {
+        @for (const comp of results.value) {
+            const Icon = icons[comp.icon] || icons.defaultIcon;
             <a {...router.value.getLinkProps({ to: `/components/${comp.id}` })}>
                 <Card class="group relative cursor-pointer overflow-hidden p-4 transition-colors hover:bg-muted/40">
             // Edge line keeps cards aligned with the Base UI docs grid language.
@@ -61,7 +62,6 @@ export function Components() {
             <div class="relative">
               // Icon
               <div class="mb-4 w-fit rounded-md border border-border bg-background p-2 transition-colors group-hover:bg-card">
-              let Icon = icons[comp.icon] || icons.defaultIcon;
               <Icon class="w-6 h-6 text-primary" />
               </div>
 
@@ -70,7 +70,7 @@ export function Components() {
                 <h3 class="text-base font-semibold transition-colors group-hover:text-primary">
                   {comp.label}
                 </h3>
-                if (comp.beta) {
+                @if (comp.beta) {
                   <Badge
                     variant="secondary"
                     class="border-border bg-card text-xs text-muted-foreground"

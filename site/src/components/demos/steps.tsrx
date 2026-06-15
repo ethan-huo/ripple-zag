@@ -2,7 +2,7 @@ import * as steps from '@zag-js/steps';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
-export function Steps() {
+export function Steps() @{
 	let service = useMachine(steps.machine, {
 		id: 'steps',
 		count: stepsData.length,
@@ -10,7 +10,7 @@ export function Steps() {
 	});
 	let api = track(() => steps.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<div {...api.value.getListProps()}>
 			<div {...api.value.getItemProps({ index: 0 })}>

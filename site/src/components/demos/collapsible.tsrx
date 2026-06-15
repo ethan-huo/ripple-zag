@@ -2,13 +2,13 @@ import * as collapsible from '@zag-js/collapsible';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
-export function Collapsible() {
+export function Collapsible() @{
 	let service = useMachine(collapsible.machine, {
 		id: 'collapsible',
 	});
 	let api = track(() => collapsible.connect(service, normalizeProps));
 
-    return <>
+    <>
     <div {...api.value.getRootProps()}>
         <button {...api.value.getTriggerProps()}>{"Ripple JS Info"}</button>
         <div {...api.value.getContentProps()}>

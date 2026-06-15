@@ -6,14 +6,14 @@ function toCamelCase(str: string): string {
     return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
 }
 
-export function ComponentDemo({id}) {
+export function ComponentDemo({id}) @{
     const Demo = track(() => demos[toCamelCase(id)]);
 
 
-    return <>
-    if (Demo) {
+    <>
+    @if (Demo.value) {
         <div class="flex min-h-36 flex-wrap items-center rounded-md border border-border bg-card p-6 shadow-[var(--shadow-1)]">
-            <@Demo />
+            <{Demo.value} />
         </div>
     }
     </>
