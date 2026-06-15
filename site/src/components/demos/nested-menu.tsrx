@@ -1,9 +1,9 @@
 import * as menu from '@zag-js/menu';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
-import { ChevronDown, ChevronRight } from '../../lib/lucide-icons.tsrx';
+import { LuChevronDown, LuChevronRight } from '../../lib/lucide-icons.tsrx';
 
-export function NestedMenu() {
+export function NestedMenu() @{
 	// Level 1 - File Menu
 	let fileMenuService = useMachine(menu.machine, {
 		id: '1',
@@ -26,24 +26,24 @@ export function NestedMenu() {
 	// Share menu trigger
 	const shareMenuTriggerProps = track(() => fileMenu.value.getTriggerItemProps(shareMenu.value));
 
-	return <>
+	<>
 	<button {...fileMenu.value.getTriggerProps()}>
 		{'Click me'}
 		<span {...fileMenu.value.getIndicatorProps()}>
-			<ChevronDown />
+			<LuChevronDown />
 		</span>
 	</button>
 
 	<Portal target={document.body}>
 		<div {...fileMenu.value.getPositionerProps()}>
 			<ul {...fileMenu.value.getContentProps()}>
-				for (const item of data) {
+				@for (const item of data) {
 					<li {...fileMenu.value.getItemProps({ value: item.value })}>{item.label}</li>
 				}
 				<li {...shareMenuTriggerProps.value}>
 					{'Share'}
 					<span {...shareMenu.value.getIndicatorProps()}>
-						<ChevronRight />
+						<LuChevronRight />
 					</span>
 				</li>
 			</ul>
@@ -53,7 +53,7 @@ export function NestedMenu() {
 	<Portal target={document.body}>
 		<div {...shareMenu.value.getPositionerProps()}>
 			<ul {...shareMenu.value.getContentProps()}>
-				for (const item of shareMenuData) {
+				@for (const item of shareMenuData) {
 					<li {...shareMenu.value.getItemProps({ value: item.value })}>{item.label}</li>
 				}
 			</ul>

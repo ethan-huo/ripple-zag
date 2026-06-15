@@ -1,17 +1,18 @@
 import * as colorPicker from '@zag-js/color-picker';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
-import { Pipette } from '../../lib/lucide-icons.tsrx';
+import { LuPipette } from '../../lib/lucide-icons.tsrx';
 
-export function ColorPicker() {
+export function ColorPicker() @{
 	let service = useMachine(colorPicker.machine, {
 		id: 'color-picker',
 		defaultValue: colorPicker.parse('#38a169').toFormat('hsla'),
 		format: 'hsla',
 	});
 	let api = track(() => colorPicker.connect(service, normalizeProps));
+	let presets = ['#f47373', '#697689', '#38a169', '#3182ce'];
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<label {...api.value.getLabelProps()}>
 			<span>{'Color:'}</span>
@@ -50,11 +51,11 @@ export function ColorPicker() {
 								</div>
 							</div>
 							<button {...api.value.getEyeDropperTriggerProps()}>
-								<Pipette />
+								<LuPipette />
 							</button>
 						</div>
 
-						if (api.value.format.startsWith('hsl')) {
+						@if (api.value.format.startsWith('hsl')) {
 							<div>
 								<div>
 									<input {...api.value.getChannelInputProps({ channel: 'hue' })} />
@@ -75,7 +76,7 @@ export function ColorPicker() {
 							</div>
 						}
 
-						if (api.value.format.startsWith('rgb')) {
+						@if (api.value.format.startsWith('rgb')) {
 							<div>
 								<div>
 									<input {...api.value.getChannelInputProps({ channel: 'red' })} />
@@ -96,7 +97,7 @@ export function ColorPicker() {
 							</div>
 						}
 
-						if (api.value.format.startsWith('hsb')) {
+						@if (api.value.format.startsWith('hsb')) {
 							<div>
 								<div>
 									<input {...api.value.getChannelInputProps({ channel: 'hue' })} />
@@ -121,8 +122,7 @@ export function ColorPicker() {
 
 						<div {...api.value.getSwatchGroupProps()}>
 							<p>{'Swatches'}</p>
-							let presets = ['#f47373', '#697689', '#38a169', '#3182ce'];
-							for (let preset of presets) {
+							@for (let preset of presets) {
 								<button {...api.value.getSwatchTriggerProps({ value: preset })}>
 									<div>
 										<div {...api.value.getTransparencyGridProps({ size: '4px' })} />

@@ -3,7 +3,7 @@ import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
 
-export function Timer() {
+export function Timer() @{
 	let service = useMachine(timer.machine, {
 		id: 'timer',
 		countdown: true,
@@ -13,7 +13,7 @@ export function Timer() {
 	});
 	let api = track(() => timer.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<div {...api.value.getAreaProps()}>
 			<div {...api.value.getItemProps({ type: "days" })}>

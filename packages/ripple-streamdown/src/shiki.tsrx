@@ -220,7 +220,7 @@ function getLineNumbersEnabled(meta: string | undefined, options: StreamdownShik
   return !/\bnoLineNumbers\b/.test(meta ?? "")
 }
 
-function ShikiBlock(props: StreamdownBlockRenderProps & { options?: StreamdownShikiRendererOptions }) {
+function ShikiBlock(props: StreamdownBlockRenderProps & { options?: StreamdownShikiRendererOptions }) @{
   const trimmedCode = track(() => trimTrailingNewlines(props.block.code))
   const result = track<HighlightResult>(createRawResult(trimmedCode.value))
   const language = track(() => normalizeLanguage(props.block.language || "text"))
@@ -257,7 +257,7 @@ function ShikiBlock(props: StreamdownBlockRenderProps & { options?: StreamdownSh
       })
   })
 
-  return (
+  (
     <div class="ripple-streamdown-shiki" data-ripple-streamdown-shiki="" data-language={language.value}>
       <div class="ripple-streamdown-code-header">
         <span>{language.value}</span>
@@ -267,12 +267,12 @@ function ShikiBlock(props: StreamdownBlockRenderProps & { options?: StreamdownSh
           class={showLineNumbers.value && "ripple-streamdown-code-line-numbers"}
           style={showLineNumbers.value && startLine.value > 1 ? { counterReset: `line ${startLine.value - 1}` } : undefined}
         >
-          for (const row of result.value.tokens; index lineIndex; key lineIndex) {
+          @for (const row of result.value.tokens; index lineIndex; key lineIndex) {
             <span class="ripple-streamdown-code-line">
-              if (row.length === 0 || (row.length === 1 && row[0].content === "")) {
+              @if (row.length === 0 || (row.length === 1 && row[0].content === "")) {
                 {"\n"}
-              } else {
-                for (const token of row; index tokenIndex; key tokenIndex) {
+              } @else {
+                @for (const token of row; index tokenIndex; key tokenIndex) {
                   <span class="ripple-streamdown-code-token" style={getTokenStyle(token)} {...token.htmlAttrs}>
                     {token.content}
                   </span>

@@ -8,16 +8,16 @@ const data = [
     { id: "contact", label: "Contact" },
 ]
 
-export function Accordion() {
+export function Accordion() @{
 	let service = useMachine(accordion.machine, {
 		id: 'accordion-1',
 		defaultValue: 'contact',
 	});
 	let api = track(() => accordion.connect(service, normalizeProps));
 
-    return <>
+    <>
     <div {...api.value.getRootProps()}>
-        for (const item of data) {
+        @for (const item of data) {
             <div {...api.value.getItemProps({ value: item.id })}>
                 <h3>
                     <button {...api.value.getItemTriggerProps({ value: item.id })}>

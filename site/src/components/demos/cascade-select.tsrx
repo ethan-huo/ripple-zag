@@ -2,27 +2,27 @@ import * as cascadeSelect from '@zag-js/cascade-select';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
 import { trackSplit } from '../../lib/track-split';
-import { ChevronDown, ChevronRight, Check, X } from '../../lib/lucide-icons.tsrx';
+import { LuChevronDown, LuChevronRight, LuCheck, LuX } from '../../lib/lucide-icons.tsrx';
 
-export function CascadeSelect() {
+export function CascadeSelect() @{
 	let service = useMachine(cascadeSelect.machine, {
 		id: 'cascade-select',
 		collection,
 	});
 	let api = track(() => cascadeSelect.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<label {...api.value.getLabelProps()}>{'Location'}</label>
 		<div {...api.value.getControlProps()}>
 			<button {...api.value.getTriggerProps()}>
 				<span>{api.value.valueAsString || 'Select location'}</span>
 				<span {...api.value.getIndicatorProps()}>
-					<ChevronDown size={16} />
+					<LuChevronDown size={16} />
 				</span>
 			</button>
 			<button {...api.value.getClearTriggerProps()}>
-				<X size={14} />
+				<LuX size={14} />
 			</button>
 		</div>
 		<Portal target={document.body}>
@@ -43,7 +43,7 @@ interface TreeNodeProps {
 	api: cascadeSelect.Api;
 }
 
-function TreeNode(props) {
+function TreeNode(props) @{
 	let [indexPath, value, node, api] = trackSplit(props, ['indexPath', 'value', 'node', 'api']);
 	let cascadeApi = track(() => api.value);
 	let nodeProps = track(() => ({ indexPath: indexPath.value, value: value.value, item: node.value }));
@@ -58,9 +58,9 @@ function TreeNode(props) {
 			: value.value,
 	);
 
-	return <>
+	<>
 	<ul {...cascadeApi.value.getListProps(nodeProps.value)}>
-		for (const item of children.value; index index) {
+		@for (const item of children.value; index index) {
 			let itemProps = track(
 				() => ({
 					indexPath: [...indexPath.value, index],
@@ -73,18 +73,18 @@ function TreeNode(props) {
 
 			<li {...cascadeApi.value.getItemProps(itemProps.value)}>
 				<span {...cascadeApi.value.getItemTextProps(itemProps.value)}>{item.label}</span>
-				if (itemState.value.hasChildren) {
+				@if (itemState.value.hasChildren) {
 					<span data-scope="cascade-select" data-part="branch-indicator">
-						<ChevronRight size={14} />
+						<LuChevronRight size={14} />
 					</span>
 				}
 				<span {...cascadeApi.value.getItemIndicatorProps(itemProps.value)}>
-					<Check size={12} />
+					<LuCheck size={12} />
 				</span>
 			</li>
 		}
 	</ul>
-	if (highlightedChild.value && collection.isBranchNode(highlightedChild.value)) {
+	@if (highlightedChild.value && collection.isBranchNode(highlightedChild.value)) {
 		<TreeNode
 			node={highlightedChild.value}
 			indexPath={highlightedIndexPath.value}

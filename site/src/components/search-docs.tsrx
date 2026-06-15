@@ -3,11 +3,11 @@ import { createFilter } from "@zag-js/i18n-utils"
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
 import { components } from '../lib/components';
-import { Search } from "../lib/lucide-icons.tsrx";
+import { LuSearch } from '../lib/lucide-icons.tsrx';
 import { RouteContext } from "../lib/route-context";
 
 // TODO utiity cmd+k zag hotkeys will also handle cmd/ctrl+k
-export function SearchDocs() {
+export function SearchDocs() @{
     let options = track(components)
     const router = RouteContext.get()
     const filter = createFilter({ sensitivity: "base" })
@@ -49,10 +49,10 @@ export function SearchDocs() {
 	});
 	let api = track(() => combobox.connect(service, normalizeProps));
 
-    return <>
+    <>
     <div {...api.value.getRootProps()}>
         <div class="relative" {...api.value.getControlProps()}>
-			<Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+			<LuSearch class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
                 {...api.value.getInputProps()}
                 class="h-8 w-64 rounded-full border border-border bg-card pl-9! pr-14! text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-[-1px]"
@@ -64,9 +64,9 @@ export function SearchDocs() {
     </div>
     <Portal target={document.body}>
         <div {...api.value.getPositionerProps()}>
-            if(options.value.length > 0) {
+            @if(options.value.length > 0) {
                 <ul class="mt-2 max-h-80 w-(--reference-width) overflow-auto rounded-md border border-border bg-popover p-1 shadow-[var(--shadow-2)]" {...api.value.getContentProps()}>
-                    for(let item of options.value) {
+                    @for(let item of options.value) {
                         <li class="rounded px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-muted" {...api.value.getItemProps({ item })}>
                             {item.label}
                         </li>

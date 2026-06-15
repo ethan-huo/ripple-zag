@@ -222,27 +222,23 @@ function animateHtml(html: string, props: StreamdownProps, prevContentLength: nu
   }
 }
 
-function DefaultLoading(_props: StreamdownBlockRenderProps) {
-  return (
-    <div class="ripple-streamdown-block-skeleton" data-ripple-streamdown-block-skeleton="">
-      <div class="ripple-streamdown-block-skeleton-header" />
-      <div class="ripple-streamdown-block-skeleton-body">
-        <span class="ripple-streamdown-block-skeleton-spinner" aria-hidden="true" />
-        <span class="ripple-streamdown-visually-hidden">{"Loading block"}</span>
-      </div>
+function DefaultLoading(_props: StreamdownBlockRenderProps) @{
+  <div class="ripple-streamdown-block-skeleton" data-ripple-streamdown-block-skeleton="">
+    <div class="ripple-streamdown-block-skeleton-header" />
+    <div class="ripple-streamdown-block-skeleton-body">
+      <span class="ripple-streamdown-block-skeleton-spinner" aria-hidden="true" />
+      <span class="ripple-streamdown-visually-hidden">{"Loading block"}</span>
     </div>
-  )
+  </div>
 }
 
-function DefaultError(props: StreamdownBlockErrorProps) {
+function DefaultError(props: StreamdownBlockErrorProps) @{
   const message = props.error instanceof Error ? props.error.message : "Unable to render block."
 
-  return (
-    <div class="ripple-streamdown-block-error" data-ripple-streamdown-block-error="">
-      <strong>{"Block render failed"}</strong>
-      <pre>{message}</pre>
-    </div>
-  )
+  <div class="ripple-streamdown-block-error" data-ripple-streamdown-block-error="">
+    <strong>{"Block render failed"}</strong>
+    <pre>{message}</pre>
+  </div>
 }
 
 function pruneRenderCache(cache: MarkdownRenderCache) {
@@ -407,14 +403,14 @@ function detectTextDirection(text: string) {
 function RendererLoadingBlock(props: {
   block: StreamdownCodeBlock
   loading?: Component<StreamdownBlockRenderProps>
-}) {
-  if (props.loading) {
-    const LoadingComponent = track(() => props.loading!)
+}) @{
+  const LoadingComponent = track(() => props.loading!)
 
-    return <@LoadingComponent block={props.block} />
+  @if (props.loading) {
+    <{LoadingComponent.value} block={props.block} />
+  } @else {
+    <DefaultLoading block={props.block} />
   }
-
-  return <DefaultLoading block={props.block} />
 }
 
 function RendererBlock(props: {
@@ -422,30 +418,27 @@ function RendererBlock(props: {
   error?: Component<StreamdownBlockErrorProps>
   loading?: Component<StreamdownBlockRenderProps>
   renderer: StreamdownBlockRenderer
-}) {
+}) @{
   const errorComponent = props.error ?? DefaultError
   const ErrorComponent = track(() => errorComponent)
-
-  if (props.block.isStreamingTail && !props.renderer.renderWhileStreaming) {
-    return <RendererLoadingBlock block={props.block} loading={props.loading} />
-  }
-
   const RendererComponent = track(() => props.renderer.component)
 
-  return (
+  @if (props.block.isStreamingTail && !props.renderer.renderWhileStreaming) {
+    <RendererLoadingBlock block={props.block} loading={props.loading} />
+  } @else {
     <div class="ripple-streamdown-renderer-block" data-ripple-streamdown-renderer-block={props.renderer.name}>
-      try {
-        <@RendererComponent block={props.block} />
-      } pending {
+      @try {
+        <{RendererComponent.value} block={props.block} />
+      } @pending {
         <RendererLoadingBlock block={props.block} loading={props.loading} />
-      } catch (error) {
-        <@ErrorComponent block={props.block} error={error} />
+      } @catch (error) {
+        <{ErrorComponent.value} block={props.block} error={error} />
       }
     </div>
-  )
+  }
 }
 
-export function Streamdown(props: StreamdownProps) {
+export function Streamdown(props: StreamdownProps) @{
   const renderCache: MarkdownRenderCache = new Map()
   const animationState: StreamdownAnimationState = new Map()
   const mode = track<StreamdownMode>(() => props.mode ?? "streaming")
@@ -492,35 +485,33 @@ export function Streamdown(props: StreamdownProps) {
     return props.dir === "auto" ? detectTextDirection(getContent(props)) : props.dir
   })
 
-  return (
-    <div
-      class={[
-        "ripple-streamdown",
-        mode.value === "streaming" && "ripple-streamdown-streaming",
-        shouldShowCaret.value && "ripple-streamdown-with-caret",
-        props.class,
-        props.className
-      ]}
-      data-ripple-streamdown=""
-      data-mode={mode.value}
-      dir={direction.value}
-      style={caretStyle.value}
-    >
-      for (const block of blocks.value; index index; key block.key) {
-        if (block.type === "renderer") {
-          <RendererBlock
-            block={block.block}
-            error={props.error}
-            loading={props.loading}
-            renderer={block.renderer}
-          />
-        } else {
-          <Fragment innerHTML={block.html} />
-        }
+  <div
+    class={[
+      "ripple-streamdown",
+      mode.value === "streaming" && "ripple-streamdown-streaming",
+      shouldShowCaret.value && "ripple-streamdown-with-caret",
+      props.class,
+      props.className
+    ]}
+    data-ripple-streamdown=""
+    data-mode={mode.value}
+    dir={direction.value}
+    style={caretStyle.value}
+  >
+    @for (const block of blocks.value; index index; key block.key) {
+      @if (block.type === "renderer") {
+        <RendererBlock
+          block={block.block}
+          error={props.error}
+          loading={props.loading}
+          renderer={block.renderer}
+        />
+      } @else {
+        <Fragment innerHTML={block.html} />
       }
-      if (blocks.value.length === 0 && shouldShowCaret.value) {
-        <span aria-hidden="true" />
-      }
-    </div>
-  )
+    }
+    @if (blocks.value.length === 0 && shouldShowCaret.value) {
+      <span aria-hidden="true" />
+    }
+  </div>
 }

@@ -2,14 +2,14 @@ import * as progress from '@zag-js/progress';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
-export function CircularProgress() {
+export function CircularProgress() @{
 	let service = useMachine(progress.machine, {
 		id: 'circular-progress',
 		defaultValue: 60,
 	});
 	let api = track(() => progress.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div>
 		<div {...api.value.getRootProps()}>
 			<div {...api.value.getLabelProps()}>{"Upload progress"}</div>

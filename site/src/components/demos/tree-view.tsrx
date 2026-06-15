@@ -2,16 +2,16 @@ import * as tree from '@zag-js/tree-view';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 import { trackSplit } from '../../lib/track-split';
-import { File, Folder, ChevronRight } from '../../lib/lucide-icons.tsrx';
+import { LuFile, LuFolder, LuChevronRight } from '../../lib/lucide-icons.tsrx';
 
-export function TreeView() {
+export function TreeView() @{
 	let service = useMachine(tree.machine, {
 		id: 'tree-view',
 		collection,
 	});
 	let api = track(() => tree.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<h3 {...api.value.getLabelProps()}>{"My Documents"}</h3>
 		<div data-scope="tree-view" data-part="controls">
@@ -31,8 +31,8 @@ export function TreeView() {
 			</button>
 		</div>
 		<div {...api.value.getTreeProps()}>
-			if (collection.rootNode.children) {
-				for (const node of collection.rootNode.children; index nodeIndex) {
+			@if (collection.rootNode.children) {
+				@for (const node of collection.rootNode.children; index nodeIndex) {
 					<TreeNode
 						node={node}
 						indexPath={[nodeIndex]}
@@ -96,26 +96,26 @@ const collection = tree.collection({
 });
 
 
-function TreeNode(props) {
+function TreeNode(props) @{
     let [indexPath, node, api] = trackSplit(props, ['indexPath', 'node', 'api']);
 	let nodeProps = track(() => ({ indexPath: indexPath.value, node: node.value }));
 	let treeApi = track(() => api.value);
     let nodeState = track(() => treeApi.value.getNodeState(nodeProps.value));
 
-	return <>
-	if (nodeState.value.isBranch) {
+	<>
+	@if (nodeState.value.isBranch) {
 		<div {...treeApi.value.getBranchProps(nodeProps.value)}>
 			<div {...treeApi.value.getBranchControlProps(nodeProps.value)}>
-				<Folder size={16} />
+				<LuFolder size={16} />
 				<span {...treeApi.value.getBranchTextProps(nodeProps.value)}>{node.value.name}</span>
 				<span {...treeApi.value.getBranchIndicatorProps(nodeProps.value)}>
-					<ChevronRight size={16} />
+					<LuChevronRight size={16} />
 				</span>
 			</div>
 			<div {...treeApi.value.getBranchContentProps(nodeProps.value)}>
 				<div {...treeApi.value.getBranchIndentGuideProps(nodeProps.value)} />
-				if (node.value.children) {
-					for (const childNode of node.value.children; index childIndex) {
+				@if (node.value.children) {
+					@for (const childNode of node.value.children; index childIndex) {
 						let newIndexPath = [...indexPath.value, childIndex];
 						<TreeNode
 							node={childNode}
@@ -126,9 +126,9 @@ function TreeNode(props) {
 				}
 			</div>
 		</div>
-	} else {
+	} @else {
 		<div {...treeApi.value.getItemProps(nodeProps.value)}>
-			<File size={16} />
+			<LuFile size={16} />
 			{node.value.name}
 		</div>
 	}

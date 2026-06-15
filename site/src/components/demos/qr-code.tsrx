@@ -2,7 +2,7 @@ import * as qrCode from '@zag-js/qr-code';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
 
-export function QrCode() {
+export function QrCode() @{
 	let service = useMachine(qrCode.machine, {
 		id: 'qr-code',
 		value: 'https://www.tsrxjs.com',
@@ -10,7 +10,7 @@ export function QrCode() {
 	});
 	let api = track(() => qrCode.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<div {...api.value.getRootProps()}>
 		<svg {...api.value.getFrameProps()}>
 			<path {...api.value.getPatternProps()} />

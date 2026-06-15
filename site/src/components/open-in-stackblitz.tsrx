@@ -1,5 +1,5 @@
 import { Button } from './ui/button.tsrx';
-import { Play, ExternalLink } from '../lib/lucide-icons.tsrx';
+import { LuPlay, LuExternalLink } from '../lib/lucide-icons.tsrx';
 import sdk from '@stackblitz/sdk';
 import { components } from '../lib/components';
 import { getComponentCode } from '../lib/get-component-code';
@@ -7,12 +7,12 @@ import { toPascalCase } from '../lib/get-component-code';
 import { getComponentStyles } from '../lib/get-component-styles';
 import lucideIcons from '../lib/lucide-icons.tsrx?raw';
 
-export function OpenInStackblitz({ id }: { id: string }) {
-	return <>
+export function OpenInStackblitz({ id }: { id: string }) @{
+	<>
 	<Button data-id='stackblitz' onClick={() => openInStackblitz(id)} variant='outline' size='sm'>
-		<Play class='h-3 w-3 mr-1.5' />
+		<LuPlay class='h-3 w-3 mr-1.5' />
 		{'Open in StackBlitz'}
-		<ExternalLink class='h-3 w-3 ml-1.5' />
+		<LuExternalLink class='h-3 w-3 ml-1.5' />
 	</Button>
 	</>
 }

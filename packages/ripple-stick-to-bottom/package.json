@@ -7,7 +7,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc --noEmit",
-    "test": "bun test"
+    "test": "echo 'No tests configured for ripple-stick-to-bottom'"
   },
   "exports": {
     ".": "./src/stick-to-bottom.tsrx",

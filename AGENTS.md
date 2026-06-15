@@ -13,8 +13,11 @@ components.
 - `packages/zag-ripple/tests/` - Vitest + TSRX regression tests for the adapter.
 - `site/` - Vite demo site built with Ripple/TSRX and Zag component demos.
 - `site/src/components/demos/` - One demo per Zag component.
-- `site/scripts/generate-lucide-icons.mjs` - Generates the TSRX Lucide icon
-  wrapper used by demos.
+- `site/icons.json` - Sigil manifest declaring the icon libraries and icons used
+  by the demo site.
+- `site/src/lib/lucide-icons.tsrx` - Generated TSRX icon wrapper produced by
+  `sigil etch` from `site/icons.json`. Do not hand-edit; update the manifest and
+  regenerate.
 
 ## Commands
 
@@ -33,7 +36,7 @@ bun --filter zag-ripple test -- --run
 # Build the demo site
 bun --filter ./site build
 
-# Generate site Lucide icons
+# Generate site icons from the sigil manifest
 bun --filter ./site icons:generate
 ```
 
@@ -98,4 +101,5 @@ created.
 
 - Zag JS LLM docs: https://zagjs.com/llms.txt
 - Ripple/TSRX LLM docs: https://www.ripple-ts.com/llms.txt
+- TSRX LLM docs: https://tsrx.dev/llms.txt
 - Base UI LLM docs for the demo site style reference: https://base-ui.com/llms.txt

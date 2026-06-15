@@ -11,32 +11,25 @@ import { ComponentDemo } from './components/component-demo.tsrx';
 import { Button } from './components/ui/button.tsrx';
 import { Card } from './components/ui/card.tsrx';
 import { components } from './lib/components';
-import {
-    ArrowLeft,
-    Copy,
-    Code,
-    ChevronLeft,
-    ChevronRight,
-    ExternalLink,
-    FileText,
-    Check,
-  } from "./lib/lucide-icons.tsrx";
+import { LuArrowLeft, LuCopy, LuCode, LuChevronLeft, LuChevronRight, LuExternalLink, LuFileText, LuCheck } from './lib/lucide-icons.tsrx';
 import { useCopy } from "./lib/use-copy.tsrx";
 import apiJson from "@zag-js/docs"
 import * as demos from './components/demos/index.tsrx';
 import { RouteContext } from "./lib/route-context";
 import { track } from "ripple";
 
-export function Component() {
+export function Component() @{
     const router = RouteContext.get()
-    
+
     const componentId = track(() => router.value.location.params.id)
     const currentIndex = track(() => components.findIndex((comp) => comp.id === componentId.value))
     const comp = track(() => components[currentIndex.value])
     const prevComponent = track(() => currentIndex.value > 0 ? components[currentIndex.value - 1] : null)
     const nextComponent = track(() => currentIndex.value < components.length - 1 ? components[currentIndex.value + 1] : null)
+    let [copyInstall, copiedInstall] = useCopy();
+    const code = track(() => `npm install zag-ripple zag.value-js/${componentId.value}`);
 
-    return <>
+    <>
     <head>
         <title>{`${comp.value.label} | ZagRipple`}</title>
     </head>
@@ -59,7 +52,7 @@ export function Component() {
         <div class="mb-6 flex items-center gap-4">
             <a {...router.value.getLinkProps({ to: '/components' })}>
             <Button variant="ghost" size="sm">
-                <ArrowLeft class="h-4 w-4 mr-2" />
+                <LuArrowLeft class="h-4 w-4 mr-2" />
                 {"Back to Components"}
             </Button>
             </a>
@@ -85,9 +78,9 @@ export function Component() {
                 size="sm"
                 data-id="zag-docs"
                 >
-                    <FileText class="h-3 w-3 mr-1.5" />
+                    <LuFileText class="h-3 w-3 mr-1.5" />
                     {"Zag.js Docs"}
-                    <ExternalLink class="h-3 w-3 ml-1.5" />
+                    <LuExternalLink class="h-3 w-3 ml-1.5" />
                 </Button>
 
             
@@ -98,9 +91,9 @@ export function Component() {
                 size="sm"
                 data-id="view-source"
                 >
-                    <Code class="h-3 w-3 mr-1.5" />
+                    <LuCode class="h-3 w-3 mr-1.5" />
                     {"View Source"}
-                    <ExternalLink class="h-3 w-3 ml-1.5" />
+                    <LuExternalLink class="h-3 w-3 ml-1.5" />
                 </Button>
             </div>
             <ComponentDemo id={componentId.value} />
@@ -112,14 +105,12 @@ export function Component() {
             <h2 class="mb-4 text-[1.3125rem] font-bold">{"Installation"}</h2>
             <Card class="p-4">
                 <div class="flex items-center justify-between">
-                let [copyInstall, copiedInstall] = useCopy();
-                const code = track(() => `npm install zag-ripple zag.value-js/${componentId.value}`);
                 <CodeBlock code={code.value} language="bash" />
                 <Button variant="ghost" size="sm" onClick={() => copyInstall(code.value)}>
-                    if (copiedInstall.value) {
-                        <Check class="h-4 w-4" />
-                    } else {
-                        <Copy class="h-4 w-4" />
+                    @if (copiedInstall.value) {
+                        <LuCheck class="h-4 w-4" />
+                    } @else {
+                        <LuCopy class="h-4 w-4" />
                     }
                 </Button>
                 </div>
@@ -129,11 +120,13 @@ export function Component() {
         // Usage
         <Usage id={componentId.value} />
 
-        if(componentId.value in apiJson) {
-            // Context
-            <ContextTable id={componentId.value} />
-            // API
-            <ApiTable id={componentId.value} />
+        @if (componentId.value in apiJson) {
+            <>
+                // Context
+                <ContextTable id={componentId.value} />
+                // API
+                <ApiTable id={componentId.value} />
+            </>
         }
 
         // Accessibility
@@ -155,14 +148,14 @@ export function Component() {
         // Navigation
         <section>
             <div class="flex justify-between items-center">
-                if (prevComponent.value) {
+                @if (prevComponent.value) {
                     <a {...router.value.getLinkProps({ to: `/components/${prevComponent.value.id}` })} class="mr-auto">
                         <Button
                             variant="outline"
                             size="lg"
                             class="flex items-center gap-3 px-6 py-4 h-auto cursor-pointer"
                         >
-                            <ChevronLeft class="h-5 w-5" />
+                            <LuChevronLeft class="h-5 w-5" />
                             <div class="text-left">
                             <div class="text-sm text-muted-foreground">{"Previous"}</div>
                             <div class="font-semibold text-base">{prevComponent.value.label}</div>
@@ -170,7 +163,7 @@ export function Component() {
                         </Button>
                     </a>
                 }
-                if (nextComponent.value) {
+                @if (nextComponent.value) {
                     <a {...router.value.getLinkProps({ to: `/components/${nextComponent.value.id}` })} class="ml-auto">
                         <Button
                             variant="outline"
@@ -181,7 +174,7 @@ export function Component() {
                             <div class="text-sm text-muted-foreground">{"Next"}</div>
                             <div class="font-semibold text-base">{nextComponent.value.label}</div>
                             </div>
-                            <ChevronRight class="h-5 w-5" />
+                            <LuChevronRight class="h-5 w-5" />
                         </Button>
                     </a>
                 }

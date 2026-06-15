@@ -56,9 +56,13 @@ async function renderMermaid(code: string, config: MermaidConfig | undefined) {
   return result.svg
 }
 
+function ThrowError(props: { error: unknown }) {
+  throw props.error
+}
+
 function MermaidBlock(props: StreamdownBlockRenderProps & {
   config?: MermaidConfig
-}) {
+}) @{
   const svg = track("")
   const status = track<"pending" | "ready" | "stale">("pending")
   const finalError = track<unknown | null>(null)
@@ -107,17 +111,19 @@ function MermaidBlock(props: StreamdownBlockRenderProps & {
       })
   })
 
-  return <>
-    if (finalError.value) {
-      throw finalError.value
+  <>
+    @if (finalError.value) {
+      <ThrowError error={finalError.value} />
     }
 
     <div class="ripple-streamdown-mermaid" data-ripple-streamdown-mermaid="" data-state={status.value}>
-      if (svg.value) {
+      @if (svg.value) {
         <Fragment innerHTML={svg.value} />
-      } else {
-        <span class="ripple-streamdown-block-skeleton-spinner" aria-hidden="true" />
-        <span class="ripple-streamdown-visually-hidden">"Rendering diagram"</span>
+      } @else {
+        <>
+          <span class="ripple-streamdown-block-skeleton-spinner" aria-hidden="true" />
+          <span class="ripple-streamdown-visually-hidden">{"Rendering diagram"}</span>
+        </>
       }
     </div>
   </>

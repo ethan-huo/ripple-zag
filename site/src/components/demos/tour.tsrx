@@ -1,9 +1,9 @@
 import * as tour from '@zag-js/tour';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track, Portal } from 'ripple';
-import { X } from '../../lib/lucide-icons.tsrx';
+import { LuX } from '../../lib/lucide-icons.tsrx';
 
-export function Tour() {
+export function Tour() @{
 	let service = useMachine(
 		tour.machine,
 		() => ({
@@ -13,18 +13,18 @@ export function Tour() {
 	);
 	let api = track(() => tour.connect(service, normalizeProps));
 
-	return <>
+	<>
 	<button data-scope="tour" data-part="trigger" onClick={() => api.value.start()}>{'Start Tour'}</button>
 
-	if (api.value.step && api.value.open) {
+	@if (api.value.step && api.value.open) {
 		<Portal target={document.body}>
-			if (api.value.step.backdrop) {
+			@if (api.value.step.backdrop) {
 				<div {...api.value.getBackdropProps()} />
 			}
 			<div {...api.value.getSpotlightProps()} />
 			<div {...api.value.getPositionerProps()}>
 				<div {...api.value.getContentProps()}>
-					if (api.value.step.arrow) {
+					@if (api.value.step.arrow) {
 						<div {...api.value.getArrowProps()}>
 							<div {...api.value.getArrowTipProps()} />
 						</div>
@@ -35,16 +35,16 @@ export function Tour() {
 					<p {...api.value.getTitleProps()}>{api.value.step.title}</p>
 					<div {...api.value.getDescriptionProps()}>{api.value.step.description}</div>
 
-					if (api.value.step.actions) {
+					@if (api.value.step.actions) {
 						<div data-scope="tour" data-part="actions">
-							for (const action of api.value.step.actions; index actionIndex) {
+							@for (const action of api.value.step.actions; index actionIndex) {
 								<button {...api.value.getActionTriggerProps({ action })}>{action.label}</button>
 							}
 						</div>
 					}
 
 					<button {...api.value.getCloseTriggerProps()}>
-						<X size={16} />
+						<LuX size={16} />
 					</button>
 				</div>
 			</div>

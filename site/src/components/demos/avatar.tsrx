@@ -5,7 +5,7 @@ import { track } from 'ripple';
 const name = 'John Doe';
 const src = 'https://avatar.iran.liara.run/public/10';
 
-export function Avatar() {
+export function Avatar() @{
 	let service = useMachine(avatar.machine, {
 		id: 'avatar',
 	});
@@ -16,7 +16,7 @@ export function Avatar() {
         .map((s) => s[0])
         .join("")
 
-    return <>
+    <>
     <div {...api.value.getRootProps()}>
         <div {...api.value.getFallbackProps()}>
             <div>{initial}</div>

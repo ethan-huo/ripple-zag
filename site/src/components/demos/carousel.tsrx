@@ -1,7 +1,7 @@
 import * as carousel from '@zag-js/carousel';
 import { normalizeProps, useMachine } from 'zag-ripple';
 import { track } from 'ripple';
-import { ChevronLeft, ChevronRight } from '../../lib/lucide-icons.tsrx';
+import { LuChevronLeft, LuChevronRight } from '../../lib/lucide-icons.tsrx';
 
 const items = [
   "https://tinyurl.com/dd44dvue",
@@ -10,17 +10,17 @@ const items = [
   "https://tinyurl.com/4hpw7nmf",
   "https://tinyurl.com/7ksvxfjh",
 ]
-export function Carousel() {
+export function Carousel() @{
 	let service = useMachine(carousel.machine, {
 		id: 'carousel',
         slideCount: items.length,
 	});
 	let api = track(() => carousel.connect(service, normalizeProps));
 
-    return <>
+    <>
     <div {...api.value.getRootProps()}>
         <div {...api.value.getItemGroupProps()}>
-            for(const image of items; index index) {
+            @for(const image of items; index index) {
                 <div {...api.value.getItemProps({ index })}>
                     <img src={image} alt={`Slide Image ${index}`} />
                 </div>
@@ -29,15 +29,15 @@ export function Carousel() {
 
         <div {...api.value.getControlProps()}>
         <button {...api.value.getPrevTriggerProps()}>
-            <ChevronLeft />
+            <LuChevronLeft />
         </button>
         <div {...api.value.getIndicatorGroupProps()}>
-            for(const _ of api.value.pageSnapPoints; index index) {
+            @for(const _ of api.value.pageSnapPoints; index index) {
                 <button {...api.value.getIndicatorProps({ index })} />
             }
         </div>
         <button {...api.value.getNextTriggerProps()}>
-            <ChevronRight />
+            <LuChevronRight />
         </button>
         </div>
     </div>

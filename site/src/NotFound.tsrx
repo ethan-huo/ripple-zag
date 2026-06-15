@@ -1,5 +1,5 @@
-export function NotFound() {
-	return <>
+export function NotFound() @{
+	<>
 	<head>
 		<title>{"Not Found | ZagRipple"}</title>
 	</head>

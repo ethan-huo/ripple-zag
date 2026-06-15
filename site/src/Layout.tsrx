@@ -10,7 +10,7 @@ import { track } from "ripple"
 import { RouteContext } from "./lib/route-context"
 import { Navigation } from "./components/navigation.tsrx";
 
-export function Layout() {
+export function Layout() @{
 	const service = useMachine(routing.machine, {
 		id: "router",
 		routes: [
@@ -25,29 +25,31 @@ export function Layout() {
 
 	RouteContext.set(router)
 
-	return <>
+	<>
 	<div class="fixed inset-0 grid-pattern opacity-50 -z-10" />
 	<div class="min-h-screen">
 
-		if(router.value.currentRouteName === "home") {
+		@if(router.value.currentRouteName === "home") {
 			<Page />
-		} 
-		
-		if(router.value.currentRouteName === "components") {
-			<Components />
-		} 
+		}
 
-		if(router.value.currentRouteName === "component") {
+		@if(router.value.currentRouteName === "components") {
+			<Components />
+		}
+
+		@if(router.value.currentRouteName === "component") {
 			<Component />
 		}
 
-		if(router.value.currentRouteName === "streamdown") {
+		@if(router.value.currentRouteName === "streamdown") {
 			<StreamdownPlayground />
 		}
 
-		if(router.value.currentRouteName === "not-found") {
-			<Navigation />
-			<NotFound />
+		@if(router.value.currentRouteName === "not-found") {
+			<>
+				<Navigation />
+				<NotFound />
+			</>
 		}
 	</div>
 	</>

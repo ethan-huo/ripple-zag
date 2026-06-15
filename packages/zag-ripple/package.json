@@ -39,7 +39,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "bun run build && vitest",
+    "test": "bun run build && NODE_OPTIONS='--conditions=browser' vitest",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "prepack": "clean-package",
@@ -55,7 +55,7 @@
     "ripple": ">=0.3.0"
   },
   "devDependencies": {
-    "@ripple-ts/vite-plugin": "^0.3.72",
+    "@ripple-ts/vite-plugin": "^0.3.84",
     "clean-package": "2.2.0",
     "jsdom": "^28.1.0",
     "tsup": "^8.4.0",
