@@ -5,13 +5,13 @@
 	"description": "",
 	"type": "module",
 	"engines": {
-		"node": ">=20.0.0"
+		"node": ">=22.0.0"
 	},
 	"scripts": {
 		"start": "vite dev",
 		"dev": "vite dev",
 		"build": "vite build",
-		"vercel-build": "vite build && ripple-adapt-vercel",
+		"vercel-build": "vite build && ripple-adapt-vercel --runtime nodejs24.x",
 		"preview": "ripple-preview",
 		"icons:generate": "sigil etch --output src/lib/lucide-icons.tsrx --jsx tsrx",
 		"lint": "eslint .",
